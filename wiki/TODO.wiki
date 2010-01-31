@@ -3,5 +3,6 @@
   * wiki documentation
   * use hamcrest throughout
   * rename unit test methods to follow standard
+  * get jar in maven repo
   * upload Spring xml cache configuration file
   * upload aop.xml file
