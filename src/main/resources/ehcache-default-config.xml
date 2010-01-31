@@ -1,0 +1,37 @@
+<!--
+   Copyright 2010 Brad Cupit
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<!--
+	NOTE: this file is not actually used. It only exists to:
+		1) satisfy ehcache so it won't generate a warning at startup
+		2) in the future, if code creates a cache with CacheManager.add(java.lang.String)
+		   it will use the safe defaults in this file
+-->
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.sf.net/ehcache.xsd">
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache
+            maxElementsInMemory="1"
+            eternal="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="1"
+            overflowToDisk="false"
+            maxElementsOnDisk="0"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+     />
+</ehcache> 
