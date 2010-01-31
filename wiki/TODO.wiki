@@ -1,0 +1,7 @@
+#summary items that should be done
+
+  * wiki documentation
+  * use hamcrest throughout
+  * rename unit test methods to follow standard
+  * upload Spring xml cache configuration file
+  * upload aop.xml file
