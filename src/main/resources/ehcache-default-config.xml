@@ -15,10 +15,10 @@
 -->
 
 <!--
-	NOTE: this file is not actually used. It only exists to:
-		1) satisfy ehcache so it won't generate a warning at startup
-		2) in the future, if code creates a cache with CacheManager.add(java.lang.String)
-		   it will use the safe defaults in this file
+    NOTE: this file is not actually used. It only exists to:
+        1) satisfy ehcache so it won't generate a warning at startup
+        2) in the future, if code creates a cache with CacheManager.add(java.lang.String)
+           it will use the safe defaults in this file
 -->
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.sf.net/ehcache.xsd">
     <diskStore path="java.io.tmpdir"/>
