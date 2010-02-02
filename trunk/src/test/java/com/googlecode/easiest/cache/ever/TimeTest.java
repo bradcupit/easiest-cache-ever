@@ -25,20 +25,20 @@ import org.junit.Test;
  * @author Brad Cupit
  */
 public class TimeTest {
-	@Test
-	public void convertToSeconds() throws Exception {
-		assertEquals(1, Time.NANOSECONDS.toSeconds(1000 * 1000 * 1000));
-		assertEquals(1, Time.MICROSECONDS.toSeconds(1000 * 1000));
-		assertEquals(1, Time.MILLISECONDS.toSeconds(1000));
-		assertEquals(1, Time.SECONDS.toSeconds(1));
-		assertEquals(60, Time.MINUTES.toSeconds(1));
-		assertEquals(60 * 60, Time.HOURS.toSeconds(1));
-		assertEquals(60 * 60 * 24, Time.DAYS.toSeconds(1));
-		assertEquals(60 * 60 * 24 * 7, Time.WEEKS.toSeconds(1));
-	}
+    @Test
+    public void convertToSeconds() throws Exception {
+        assertEquals(1, Time.NANOSECONDS.toSeconds(1000 * 1000 * 1000));
+        assertEquals(1, Time.MICROSECONDS.toSeconds(1000 * 1000));
+        assertEquals(1, Time.MILLISECONDS.toSeconds(1000));
+        assertEquals(1, Time.SECONDS.toSeconds(1));
+        assertEquals(60, Time.MINUTES.toSeconds(1));
+        assertEquals(60 * 60, Time.HOURS.toSeconds(1));
+        assertEquals(60 * 60 * 24, Time.DAYS.toSeconds(1));
+        assertEquals(60 * 60 * 24 * 7, Time.WEEKS.toSeconds(1));
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void toSecondsThrowsForUnset() throws Exception {
-		Time.UNSET.toSeconds(0);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void toSecondsThrowsForUnset() throws Exception {
+        Time.UNSET.toSeconds(0);
+    }
 }

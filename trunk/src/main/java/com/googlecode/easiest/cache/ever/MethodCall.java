@@ -28,71 +28,71 @@ import java.util.List;
  * @author Brad Cupit
  */
 public class MethodCall {
-	private final String className;
-	private final String methodName;
-	private final List<Class<?>> parameterTypes;
-	private final List<Object> parameters;
-	private final String fullMethodNameWithParameters;
+    private final String className;
+    private final String methodName;
+    private final List<Class<?>> parameterTypes;
+    private final List<Object> parameters;
+    private final String fullMethodNameWithParameters;
 
-	public MethodCall(String className, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
-		this.className = className;
-		this.methodName = methodName;
-		this.parameterTypes = Collections.unmodifiableList(Arrays.asList(parameterTypes));
-		this.parameters = Collections.unmodifiableList(Arrays.asList(parameters));
-		this.fullMethodNameWithParameters = buildFullMethodNameWithParameters(className, methodName, this.parameterTypes);
-	}
+    public MethodCall(String className, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
+        this.className = className;
+        this.methodName = methodName;
+        this.parameterTypes = Collections.unmodifiableList(Arrays.asList(parameterTypes));
+        this.parameters = Collections.unmodifiableList(Arrays.asList(parameters));
+        this.fullMethodNameWithParameters = buildFullMethodNameWithParameters(className, methodName, this.parameterTypes);
+    }
 
-	public String getMethodName() {
-		return methodName;
-	}
+    public String getMethodName() {
+        return methodName;
+    }
 
-	public String getClassName() {
-		return className;
-	}
+    public String getClassName() {
+        return className;
+    }
 
-	public List<Class<?>> getParameterTypes() {
-		return parameterTypes;
-	}
+    public List<Class<?>> getParameterTypes() {
+        return parameterTypes;
+    }
 
-	public List<Object> getParameters() {
-		return parameters;
-	}
+    public List<Object> getParameters() {
+        return parameters;
+    }
 
-	public String getFullMethodNameWithParameters() {
-		return fullMethodNameWithParameters;
-	}
+    public String getFullMethodNameWithParameters() {
+        return fullMethodNameWithParameters;
+    }
 
-	private String buildFullMethodNameWithParameters(String className, String methodName, List<Class<?>> parameterTypes) {
-		String fullyQualifiedMethodName = className + "." + methodName;
+    private String buildFullMethodNameWithParameters(String className, String methodName, List<Class<?>> parameterTypes) {
+        String fullyQualifiedMethodName = className + "." + methodName;
 
-		if (parameterTypes.size() == 0) {
-			return fullyQualifiedMethodName;
-		} else {
-			List<String> paramClassNames = new ArrayList<String>();
+        if (parameterTypes.size() == 0) {
+            return fullyQualifiedMethodName;
+        } else {
+            List<String> paramClassNames = new ArrayList<String>();
 
-			for (Class<?> clazz : parameterTypes) {
-				paramClassNames.add(clazz.getName());
-			}
+            for (Class<?> clazz : parameterTypes) {
+                paramClassNames.add(clazz.getName());
+            }
 
-			return fullyQualifiedMethodName + "(" + toCommaSeparatedString(paramClassNames) + ")";
-		}
-	}
+            return fullyQualifiedMethodName + "(" + toCommaSeparatedString(paramClassNames) + ")";
+        }
+    }
 
-	private String toCommaSeparatedString(List<String> classNamesOfParameters) {
-		StringBuilder stringBuilder = new StringBuilder();
-		
-		boolean first = true;
-		
-		for (String parameterClassName : classNamesOfParameters) {
-			if (first) {
-				first = false;
-			} else {
-				stringBuilder.append(",");
-			}
-			
-			stringBuilder.append(parameterClassName);
-		}
-		
-		return stringBuilder.toString();
-	}
+    private String toCommaSeparatedString(List<String> classNamesOfParameters) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        boolean first = true;
+
+        for (String parameterClassName : classNamesOfParameters) {
+            if (first) {
+                first = false;
+            } else {
+                stringBuilder.append(",");
+            }
+
+            stringBuilder.append(parameterClassName);
+        }
+
+        return stringBuilder.toString();
+    }
 }

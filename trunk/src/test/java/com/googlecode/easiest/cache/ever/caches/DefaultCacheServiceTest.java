@@ -43,273 +43,272 @@ import com.googlecode.easiest.cache.ever.CacheConstants;
 import com.googlecode.easiest.cache.ever.Time;
 import com.rits.cloning.Cloner;
 
-
 /**
  * unit test for {@link DefaultCacheService}
  * 
  * @author Brad Cupit
  */
 public class DefaultCacheServiceTest {
-	/** some number large enough that size won't be a factor in the test */
-	private static final int DONT_CARE_ABOUT_SIZE = 1000;
+    /** some number large enough that size won't be a factor in the test */
+    private static final int DONT_CARE_ABOUT_SIZE = 1000;
 
-	private final CacheConfig cacheConfig = new CacheConfig(DONT_CARE_ABOUT_SIZE, CacheConstants.NO_EXPIRATION, null);
-	private final String cacheId = "cacheId";
-	private final String cacheKey = "cacheKey";
-	private final String expectedValue = "expected value";
-	private final CacheManager ehCacheManager = new CacheManager();
-	private DefaultCacheService cacheService;
-	private final CacheManager mockEhcacheManager = mock(CacheManager.class);
+    private final CacheConfig cacheConfig = new CacheConfig(DONT_CARE_ABOUT_SIZE, CacheConstants.NO_EXPIRATION, null);
+    private final String cacheId = "cacheId";
+    private final String cacheKey = "cacheKey";
+    private final String expectedValue = "expected value";
+    private final CacheManager ehCacheManager = new CacheManager();
+    private DefaultCacheService cacheService;
+    private final CacheManager mockEhcacheManager = mock(CacheManager.class);
 
-	@Before
-	public void before() {
-		cacheService = new DefaultCacheService();
-		cacheService.setCloner(new Cloner());
-	}
+    @Before
+    public void before() {
+        cacheService = new DefaultCacheService();
+        cacheService.setCloner(new Cloner());
+    }
 
-	@After
-	public void after() {
-		ehCacheManager.shutdown();
-	}
+    @After
+    public void after() {
+        ehCacheManager.shutdown();
+    }
 
-	@Test
-	public void createsNewCacheWhenCacheIdNotFound() throws Exception {
-		cacheService.setEhcacheManager(mockEhcacheManager);
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+    @Test
+    public void createsNewCacheWhenCacheIdNotFound() throws Exception {
+        cacheService.setEhcacheManager(mockEhcacheManager);
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
-		verify(mockEhcacheManager).addCache(any(Ehcache.class));
-	}
+        verify(mockEhcacheManager).addCache(any(Ehcache.class));
+    }
 
-	@Test
-	public void doesNotCreateCacheWhenItAlreadyExists() throws Exception {
-		when(mockEhcacheManager.cacheExists(cacheId)).thenReturn(true);
+    @Test
+    public void doesNotCreateCacheWhenItAlreadyExists() throws Exception {
+        when(mockEhcacheManager.cacheExists(cacheId)).thenReturn(true);
 
-		cacheService.setEhcacheManager(mockEhcacheManager);
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-		
-		verify(mockEhcacheManager, never()).addCache((Ehcache) null);
-		verify(mockEhcacheManager, never()).addCache((Cache) null);
-		verify(mockEhcacheManager, never()).addCache((String) null);
-	}
+        cacheService.setEhcacheManager(mockEhcacheManager);
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
-	@Test
-	public void removesLeastRecentlyUsedItemWhenMaxSizeReached() throws Exception {
-		CacheConfig cacheConfig = new CacheConfig(1, CacheConstants.NO_EXPIRATION, null);
-		cacheService.setEhcacheManager(ehCacheManager);
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        verify(mockEhcacheManager, never()).addCache((Ehcache) null);
+        verify(mockEhcacheManager, never()).addCache((Cache) null);
+        verify(mockEhcacheManager, never()).addCache((String) null);
+    }
 
-		String firstCacheKey = "1";
-		String firstCachedValue = "1st val to be cached";
-		cacheService.add(cacheId, firstCacheKey, firstCachedValue);
-		assertEquals(firstCachedValue, cacheService.retrieve(cacheId, firstCacheKey).value());
+    @Test
+    public void removesLeastRecentlyUsedItemWhenMaxSizeReached() throws Exception {
+        CacheConfig cacheConfig = new CacheConfig(1, CacheConstants.NO_EXPIRATION, null);
+        cacheService.setEhcacheManager(ehCacheManager);
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
-		cacheService.add(cacheId, "2nd cache key", "this value should push the 1st value out of the cache");
+        String firstCacheKey = "1";
+        String firstCachedValue = "1st val to be cached";
+        cacheService.add(cacheId, firstCacheKey, firstCachedValue);
+        assertEquals(firstCachedValue, cacheService.retrieve(cacheId, firstCacheKey).value());
 
-		assertNull(cacheService.retrieve(cacheId, firstCacheKey).value());
-	}
+        cacheService.add(cacheId, "2nd cache key", "this value should push the 1st value out of the cache");
 
-	@Test
-	public void expiresCachedElements() throws Exception {
-		int expirationTimeInSeconds = 1;
-		CacheConfig cacheConfig = new CacheConfig(DONT_CARE_ABOUT_SIZE, expirationTimeInSeconds, Time.SECONDS);
+        assertNull(cacheService.retrieve(cacheId, firstCacheKey).value());
+    }
 
-		cacheService.setEhcacheManager(ehCacheManager);
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+    @Test
+    public void expiresCachedElements() throws Exception {
+        int expirationTimeInSeconds = 1;
+        CacheConfig cacheConfig = new CacheConfig(DONT_CARE_ABOUT_SIZE, expirationTimeInSeconds, Time.SECONDS);
 
-		String valueToBeCached = "value that will be added to the cache";
-		cacheService.add(cacheId, cacheKey, valueToBeCached);
+        cacheService.setEhcacheManager(ehCacheManager);
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
-		assertEquals(valueToBeCached, cacheService.retrieve(cacheId, cacheKey).value());
-		TimeUnit.SECONDS.sleep(expirationTimeInSeconds + 1);
-		assertNull(cacheService.retrieve(cacheId, cacheKey).value());
-	}
+        String valueToBeCached = "value that will be added to the cache";
+        cacheService.add(cacheId, cacheKey, valueToBeCached);
 
-	/**
-	 * when ehcache's timeToLiveSeconds = 0, the element will never expire.
-	 * if the user configures a very small timeout (like 10 milliseconds)
-	 * that may convert to 0 seconds, and therefore never expire. Instead,
-	 * we should round up to 1 second.
-	 * If the user wants eternal, they should use {@link CacheConstants#NO_EXPIRATION}
-	 */
-	@Test
-	public void doesNotSetZeroExpirationForVerySmallValues() throws Exception {
-		CacheConfig cacheConfig = new CacheConfig(100, 10, Time.MILLISECONDS);
+        assertEquals(valueToBeCached, cacheService.retrieve(cacheId, cacheKey).value());
+        TimeUnit.SECONDS.sleep(expirationTimeInSeconds + 1);
+        assertNull(cacheService.retrieve(cacheId, cacheKey).value());
+    }
 
-		cacheService.setEhcacheManager(ehCacheManager);
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+    /**
+     * when ehcache's timeToLiveSeconds = 0, the element will never expire.
+     * if the user configures a very small timeout (like 10 milliseconds)
+     * that may convert to 0 seconds, and therefore never expire. Instead,
+     * we should round up to 1 second.
+     * If the user wants eternal, they should use {@link CacheConstants#NO_EXPIRATION}
+     */
+    @Test
+    public void doesNotSetZeroExpirationForVerySmallValues() throws Exception {
+        CacheConfig cacheConfig = new CacheConfig(100, 10, Time.MILLISECONDS);
 
-		Cache cache = ehCacheManager.getCache(cacheId);
-		assertTrue(!cache.getCacheConfiguration().isEternal());
+        cacheService.setEhcacheManager(ehCacheManager);
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
-		int expectedTimeToLiveSeconds = 1;
-		assertEquals(expectedTimeToLiveSeconds, cache.getCacheConfiguration().getTimeToLiveSeconds());
-	}
+        Cache cache = ehCacheManager.getCache(cacheId);
+        assertTrue(!cache.getCacheConfiguration().isEternal());
 
-	/**
-	 * tests a clone of the object is put in the cache.
-	 * 
-	 * This is for thread safety. Example:
-	 *   thread 1 puts object in cache
-	 *   thread 2 gets object from cache
-	 *   thread 1 modifies the object it put in the cache
-	 *   thread 2 sees modifications <-- thread safety issue (unless object-in-cache is thread safe, which is unlikely) 
-	 */
-	@Test
-	public void clonesObjectWhenPuttingInCache() throws Exception {
-		String initialValue = "initial value";
+        int expectedTimeToLiveSeconds = 1;
+        assertEquals(expectedTimeToLiveSeconds, cache.getCacheConfiguration().getTimeToLiveSeconds());
+    }
 
-		Cacheable original = new Cacheable();
-		original.field = initialValue;
+    /**
+     * tests a clone of the object is put in the cache.
+     * 
+     * This is for thread safety. Example:
+     *   thread 1 puts object in cache
+     *   thread 2 gets object from cache
+     *   thread 1 modifies the object it put in the cache
+     *   thread 2 sees modifications <-- thread safety issue (unless object-in-cache is thread safe, which is unlikely) 
+     */
+    @Test
+    public void clonesObjectWhenPuttingInCache() throws Exception {
+        String initialValue = "initial value";
 
-		cacheService.setEhcacheManager(ehCacheManager);
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-		cacheService.add(cacheId, cacheKey, original);
-		original.field = "new value doesn't change value in cache";
-		Cacheable retrieved = (Cacheable) cacheService.retrieve(cacheId, cacheKey).value();
+        Cacheable original = new Cacheable();
+        original.field = initialValue;
 
-		assertNotSame(original, retrieved);
-		assertEquals(initialValue, retrieved.field);
-	}
+        cacheService.setEhcacheManager(ehCacheManager);
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        cacheService.add(cacheId, cacheKey, original);
+        original.field = "new value doesn't change value in cache";
+        Cacheable retrieved = (Cacheable) cacheService.retrieve(cacheId, cacheKey).value();
 
-	/**
-	 * tests the retrieved object is a clone of the object in the cache
-	 * 
-	 * This is for thread safety. Example:
-	 *   thread 1 gets object from cache
-	 *   thread 2 gets object from cache
-	 *   thread 1 modifies the object it got
-	 *   thread 2 sees modifications <-- thread safety issue (unless object-in-cache is thread safe, which is unlikely) 
-	 */
-	@Test
-	public void clonesObjectWhenGettingFromCache() throws Exception {
-		Cacheable original = new Cacheable();
-		original.field = "initial value";
+        assertNotSame(original, retrieved);
+        assertEquals(initialValue, retrieved.field);
+    }
 
-		cacheService.setEhcacheManager(ehCacheManager);
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-		cacheService.add(cacheId, cacheKey, original);
+    /**
+     * tests the retrieved object is a clone of the object in the cache
+     * 
+     * This is for thread safety. Example:
+     *   thread 1 gets object from cache
+     *   thread 2 gets object from cache
+     *   thread 1 modifies the object it got
+     *   thread 2 sees modifications <-- thread safety issue (unless object-in-cache is thread safe, which is unlikely) 
+     */
+    @Test
+    public void clonesObjectWhenGettingFromCache() throws Exception {
+        Cacheable original = new Cacheable();
+        original.field = "initial value";
 
-		Cacheable firstRetrieved = (Cacheable) cacheService.retrieve(cacheId, cacheKey).value();
-		firstRetrieved.field = "new value doesn't change value in cache";
-		Cacheable secondRetrieved = (Cacheable) cacheService.retrieve(cacheId, cacheKey).value();
+        cacheService.setEhcacheManager(ehCacheManager);
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        cacheService.add(cacheId, cacheKey, original);
 
-		assertNotSame(firstRetrieved, secondRetrieved);
-		assertTrue(!firstRetrieved.field.equals(secondRetrieved.field));
-		assertEquals(original.field, secondRetrieved.field);
-	}
+        Cacheable firstRetrieved = (Cacheable) cacheService.retrieve(cacheId, cacheKey).value();
+        firstRetrieved.field = "new value doesn't change value in cache";
+        Cacheable secondRetrieved = (Cacheable) cacheService.retrieve(cacheId, cacheKey).value();
 
-	@Test
-	public void wasFoundIsTrueWhenRetrievingExistingValue() throws Exception {
-		Cacheable original = new Cacheable();
-		original.field = "some value";
+        assertNotSame(firstRetrieved, secondRetrieved);
+        assertTrue(!firstRetrieved.field.equals(secondRetrieved.field));
+        assertEquals(original.field, secondRetrieved.field);
+    }
 
-		cacheService.setEhcacheManager(ehCacheManager);
+    @Test
+    public void wasFoundIsTrueWhenRetrievingExistingValue() throws Exception {
+        Cacheable original = new Cacheable();
+        original.field = "some value";
 
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-		cacheService.add(cacheId, cacheKey, original);
-		CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
+        cacheService.setEhcacheManager(ehCacheManager);
 
-		assertTrue(cachedValue.wasFound());
-		Cacheable cached = (Cacheable) cachedValue.value();
-		assertEquals(original.field, cached.field);
-	}
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        cacheService.add(cacheId, cacheKey, original);
+        CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
 
-	@Test
-	public void wasFoundIsFalseWhenRetrievingNonExistentValue() throws Exception {
-		cacheService.setEhcacheManager(ehCacheManager);
+        assertTrue(cachedValue.wasFound());
+        Cacheable cached = (Cacheable) cachedValue.value();
+        assertEquals(original.field, cached.field);
+    }
 
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-		CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
+    @Test
+    public void wasFoundIsFalseWhenRetrievingNonExistentValue() throws Exception {
+        cacheService.setEhcacheManager(ehCacheManager);
 
-		assertTrue(!cachedValue.wasFound());
-	}
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
 
-	@Test
-	public void cacheHandlesNullValues() throws Exception {
-		cacheService.setEhcacheManager(ehCacheManager);
+        assertTrue(!cachedValue.wasFound());
+    }
 
-		final String nullCacheValue = null;
+    @Test
+    public void cacheHandlesNullValues() throws Exception {
+        cacheService.setEhcacheManager(ehCacheManager);
 
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-		cacheService.add(cacheId, cacheKey, nullCacheValue);
-		CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
+        final String nullCacheValue = null;
 
-		assertTrue(cachedValue.wasFound());
-		assertNull(cachedValue.value());
-	}
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        cacheService.add(cacheId, cacheKey, nullCacheValue);
+        CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
 
-	/**
-	 * ehcache 1.6 does not allow null keys (since they switched to
-	 * {@link ConcurrentHashMap}, which also doesn't support null
-	 * keys. We need that support. For example: if we're caching
-	 * a method with one input param, and that parameter is null.
-	 * We need a single entry in the cache with a key of 'null'
-	 * in order to cache all input parameters.
-	 * 
-	 * We added special code to work around the lack of null keys.
-	 * This test proves that special code is working.
-	 */
-	@Test
-	public void cacheHandlesNullKey() throws Exception {
-		cacheService.setEhcacheManager(ehCacheManager);
+        assertTrue(cachedValue.wasFound());
+        assertNull(cachedValue.value());
+    }
 
-		final String nullCacheKey = null;
+    /**
+     * ehcache 1.6 does not allow null keys (since they switched to
+     * {@link ConcurrentHashMap}, which also doesn't support null
+     * keys. We need that support. For example: if we're caching
+     * a method with one input param, and that parameter is null.
+     * We need a single entry in the cache with a key of 'null'
+     * in order to cache all input parameters.
+     * 
+     * We added special code to work around the lack of null keys.
+     * This test proves that special code is working.
+     */
+    @Test
+    public void cacheHandlesNullKey() throws Exception {
+        cacheService.setEhcacheManager(ehCacheManager);
 
-		cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-		cacheService.add(cacheId, nullCacheKey, expectedValue);
-		CachedValue cachedValue = cacheService.retrieve(cacheId, nullCacheKey);
+        final String nullCacheKey = null;
 
-		assertTrue(cachedValue.wasFound());
-		assertNotNull(cachedValue.value());
-		assertEquals(expectedValue, cachedValue.value());
-	}
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        cacheService.add(cacheId, nullCacheKey, expectedValue);
+        CachedValue cachedValue = cacheService.retrieve(cacheId, nullCacheKey);
 
-	/**
-	 * This test may not fail all the time, however, if it fails
-	 * even due to an {@link ObjectExistsException}, it means
-	 * our synchronization isn't working.
-	 */
-	@Test
-	public void createCacheIfNecessaryIsThreadSafe() throws Exception {
-		cacheService.setEhcacheManager(new CacheManager() {
-			@Override
-			public boolean cacheExists(String cacheName) throws IllegalStateException {
-				boolean cacheExists = super.cacheExists(cacheName);
-				// make our data stale. won't do anything in properly synchronized
-				// code, but in unsynchronized code, will increase chances of an error
-				letAnotherThreadRun();
-				return cacheExists;
-			}
-		});
+        assertTrue(cachedValue.wasFound());
+        assertNotNull(cachedValue.value());
+        assertEquals(expectedValue, cachedValue.value());
+    }
 
-		int numThreads = 100;
-		List<? extends Callable<Void>> eachThreadDoesTheSameThing = Collections.nCopies(numThreads, new Callable<Void>() {
-			public Void call() throws Exception {
-				cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-				return null;
-			}
-		});
+    /**
+     * This test may not fail all the time, however, if it fails
+     * even due to an {@link ObjectExistsException}, it means
+     * our synchronization isn't working.
+     */
+    @Test
+    public void createCacheIfNecessaryIsThreadSafe() throws Exception {
+        cacheService.setEhcacheManager(new CacheManager() {
+            @Override
+            public boolean cacheExists(String cacheName) throws IllegalStateException {
+                boolean cacheExists = super.cacheExists(cacheName);
+                // make our data stale. won't do anything in properly synchronized
+                // code, but in unsynchronized code, will increase chances of an error
+                letAnotherThreadRun();
+                return cacheExists;
+            }
+        });
 
-		ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
-		List<Future<Void>> results = executorService.invokeAll(eachThreadDoesTheSameThing);
-		rethrowAnyExceptionsThatOccurred(results);
-	}
+        int numThreads = 100;
+        List<? extends Callable<Void>> eachThreadDoesTheSameThing = Collections.nCopies(numThreads, new Callable<Void>() {
+            public Void call() throws Exception {
+                cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+                return null;
+            }
+        });
 
-	private void rethrowAnyExceptionsThatOccurred(List<Future<Void>> results) throws InterruptedException, ExecutionException {
-		for (Future<Void> future : results) {
-			future.get();
-		}
-	}
+        ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+        List<Future<Void>> results = executorService.invokeAll(eachThreadDoesTheSameThing);
+        rethrowAnyExceptionsThatOccurred(results);
+    }
 
-	private void letAnotherThreadRun() {
-		try {
-			Thread.sleep(1);
-		} catch (InterruptedException exception) {
-			throw new RuntimeException(exception);
-		}
-	}
+    private void rethrowAnyExceptionsThatOccurred(List<Future<Void>> results) throws InterruptedException, ExecutionException {
+        for (Future<Void> future : results) {
+            future.get();
+        }
+    }
 
-	private static class Cacheable {
-		private String field;
-	}
+    private void letAnotherThreadRun() {
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    private static class Cacheable {
+        private String field;
+    }
 }

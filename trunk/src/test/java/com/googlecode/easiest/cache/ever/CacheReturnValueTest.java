@@ -19,31 +19,30 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-
 /**
  * Unit test for {@link CacheReturnValue}
  * 
  * @author Brad Cupit
  */
 public class CacheReturnValueTest {
-	@Test
-	public void methodAnnotationAvaialableWithReflection() throws Exception {
-		class TestClass {
-			@CacheReturnValue
-			@SuppressWarnings("unused")
-			public void method() {
-			}
-		}
+    @Test
+    public void methodAnnotationAvaialableWithReflection() throws Exception {
+        class TestClass {
+            @CacheReturnValue
+            @SuppressWarnings("unused")
+            public void method() {
+            }
+        }
 
-		assertTrue(TestClass.class.getMethod("method").isAnnotationPresent(CacheReturnValue.class));
-	}
+        assertTrue(TestClass.class.getMethod("method").isAnnotationPresent(CacheReturnValue.class));
+    }
 
-	@Test
-	public void classAnnotationAvaialableWithReflection() throws Exception {
-		@CacheReturnValue
-		class TestClass {
-		}
+    @Test
+    public void classAnnotationAvaialableWithReflection() throws Exception {
+        @CacheReturnValue
+        class TestClass {
+        }
 
-		assertTrue(TestClass.class.isAnnotationPresent(CacheReturnValue.class));
-	}
+        assertTrue(TestClass.class.isAnnotationPresent(CacheReturnValue.class));
+    }
 }
