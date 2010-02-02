@@ -27,53 +27,53 @@ package com.googlecode.easiest.cache.ever.caches;
  * @author Brad Cupit
  */
 public class CachedValue {
-	private final boolean found;
-	private final Object value;
+    private final boolean found;
+    private final Object value;
 
-	/**
-	 * private constructor. use the builder methods below
-	 * to instantiate.
-	 */
-	private CachedValue(boolean found, Object value) {
-		this.found = found;
-		this.value = value;
-	}
+    /**
+     * private constructor. use the builder methods below
+     * to instantiate.
+     */
+    private CachedValue(boolean found, Object value) {
+        this.found = found;
+        this.value = value;
+    }
 
-	/**
-	 * builder method. Used when the object was
-	 * found in the cache. This is simpler,
-	 * and more readable than calling the
-	 * constructor directly.
-	 */
-	public static CachedValue create(Object value) {
-		return new CachedValue(true, value);
-	}
+    /**
+     * builder method. Used when the object was
+     * found in the cache. This is simpler,
+     * and more readable than calling the
+     * constructor directly.
+     */
+    public static CachedValue create(Object value) {
+        return new CachedValue(true, value);
+    }
 
-	/**
-	 * builder method. Used when the object was
-	 * not found in the cache. This is simpler,
-	 * and more readable than calling the
-	 * constructor directly.
-	 */
-	public static CachedValue notFound() {
-		return new CachedValue(false, null);
-	}
+    /**
+     * builder method. Used when the object was
+     * not found in the cache. This is simpler,
+     * and more readable than calling the
+     * constructor directly.
+     */
+    public static CachedValue notFound() {
+        return new CachedValue(false, null);
+    }
 
-	/**
-	 * return the value as found in the cache.
-	 * If {@link #wasFound()} is false, this will
-	 * always be null.
-	 * If {@link #wasFound()} is true, this can be
-	 * null (meaning, null was stored in the cache).
-	 */
-	public Object value() {
-		return value;
-	}
+    /**
+     * return the value as found in the cache.
+     * If {@link #wasFound()} is false, this will
+     * always be null.
+     * If {@link #wasFound()} is true, this can be
+     * null (meaning, null was stored in the cache).
+     */
+    public Object value() {
+        return value;
+    }
 
-	/**
-	 * was the object found in the cache?
-	 */
-	public boolean wasFound() {
-		return found;
-	}
+    /**
+     * was the object found in the cache?
+     */
+    public boolean wasFound() {
+        return found;
+    }
 }

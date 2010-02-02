@@ -26,37 +26,37 @@ import com.googlecode.easiest.cache.ever.CacheConfig;
  * @author Brad Cupit
  */
 public interface CacheService {
-	/**
-	 * 
-	 * Creates a new cache, which can be configured separately
-	 * from all other caches.
-	 * 
-	 * Think of the {@link CacheService} as a Map of Maps: Map<cacheId, Map<key, value>>
-	 */
-	public void createCacheIfNecessary(String cacheId, CacheConfig cacheConfig);
+    /**
+     * 
+     * Creates a new cache, which can be configured separately
+     * from all other caches.
+     * 
+     * Think of the {@link CacheService} as a Map of Maps: Map<cacheId, Map<key, value>>
+     */
+    public void createCacheIfNecessary(String cacheId, CacheConfig cacheConfig);
 
-	/**
-	 * Add an object to the cache.
-	 * 
-	 * @param cacheId name of the cache to add the object to. If the cache were a Map of Maps,
-	 *                this would be the key in the first map. Example: a fully qualified method name.
-	 * @param key     a unique key for the corresponding value. If the cache were a Map of Maps,
-	 *                this would be the key in the second map. Example: serialized parameters to a method,
-	 *                uniquely identifying that invocation of the method.
-	 * @param value   the object to be cached.
-	 */
-	void add(String cacheId, String key, Object value);
+    /**
+     * Add an object to the cache.
+     * 
+     * @param cacheId name of the cache to add the object to. If the cache were a Map of Maps,
+     *                this would be the key in the first map. Example: a fully qualified method name.
+     * @param key     a unique key for the corresponding value. If the cache were a Map of Maps,
+     *                this would be the key in the second map. Example: serialized parameters to a method,
+     *                uniquely identifying that invocation of the method.
+     * @param value   the object to be cached.
+     */
+    void add(String cacheId, String key, Object value);
 
-	/**
-	 * Gets an object from the cache.
-	 * 
-	 * @param cacheId name of the cache to get the object from. If the cache were a Map of Maps,
-	 *                this would be the key in the first map. Example: a fully qualified method name.
-	 * @param key     a unique key for the cached-object-to-return. If the cache were a Map of Maps,
-	 *                this would be the key in the second map. Example: serialized parameters to a method,
-	 *                uniquely identifying that invocation of the method.
-	 * @return instance of {@link CachedValue} (will not be null). Wraps the cached object and provides
-	 *         a method signaling if the object was found in the cache. 
-	 */
-	CachedValue retrieve(String cacheId, String key);
+    /**
+     * Gets an object from the cache.
+     * 
+     * @param cacheId name of the cache to get the object from. If the cache were a Map of Maps,
+     *                this would be the key in the first map. Example: a fully qualified method name.
+     * @param key     a unique key for the cached-object-to-return. If the cache were a Map of Maps,
+     *                this would be the key in the second map. Example: serialized parameters to a method,
+     *                uniquely identifying that invocation of the method.
+     * @return instance of {@link CachedValue} (will not be null). Wraps the cached object and provides
+     *         a method signaling if the object was found in the cache. 
+     */
+    CachedValue retrieve(String cacheId, String key);
 }

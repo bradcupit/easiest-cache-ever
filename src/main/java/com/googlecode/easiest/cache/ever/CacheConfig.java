@@ -22,25 +22,25 @@ package com.googlecode.easiest.cache.ever;
  * @author Brad Cupit
  */
 public class CacheConfig {
-	private final int maxSize;
-	private final int expirationTime;
-	private final Time unit;
+    private final int maxSize;
+    private final int expirationTime;
+    private final Time unit;
 
-	public CacheConfig(int maxSize, int expirationTime, Time unit) {
-		this.maxSize = maxSize;
-		this.expirationTime = expirationTime;
-		this.unit = unit;
-	}
+    public CacheConfig(int maxSize, int expirationTime, Time unit) {
+        this.maxSize = maxSize;
+        this.expirationTime = expirationTime;
+        this.unit = unit;
+    }
 
-	public int getMaxSize() {
-		return maxSize;
-	}
+    public int getMaxSize() {
+        return maxSize;
+    }
 
-	public int getExpirationTime() {
-		return expirationTime;
-	}
+    public int getExpirationTime() {
+        return expirationTime;
+    }
 
-	public Time getUnit() {
-		return unit;
-	}
+    public Time getUnit() {
+        return unit;
+    }
 }

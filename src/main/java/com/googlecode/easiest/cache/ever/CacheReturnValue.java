@@ -76,25 +76,25 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.METHOD, ElementType.TYPE })
 public @interface CacheReturnValue {
-	/**
-	 * The maximum number of elements to cache.
-	 * If this limit is reached, the Least Recently
-	 * Used element will be pushed out of the cache.
-	 */
-	int maxSize() default CacheConstants.UNSET_MAX_SIZE; // NOTE: the real default value is configured in a spring xml file
+    /**
+     * The maximum number of elements to cache.
+     * If this limit is reached, the Least Recently
+     * Used element will be pushed out of the cache.
+     */
+    int maxSize() default CacheConstants.UNSET_MAX_SIZE; // NOTE: the real default value is configured in a spring xml file
 
-	/**
-	 * Amount of time that passes before the
-	 * element is expired and removed from
-	 * the cache. See {@link #unit()} for
-	 * the units this time is in.
-	 * 
-	 * when set to {@link CacheConstants#NO_EXPIRATION}, the elements do not expire.
-	 */
-	int expirationTime() default CacheConstants.UNSET_EXPIRATION_TIME; // NOTE: the real default value is configured in a spring xml file
+    /**
+     * Amount of time that passes before the
+     * element is expired and removed from
+     * the cache. See {@link #unit()} for
+     * the units this time is in.
+     * 
+     * when set to {@link CacheConstants#NO_EXPIRATION}, the elements do not expire.
+     */
+    int expirationTime() default CacheConstants.UNSET_EXPIRATION_TIME; // NOTE: the real default value is configured in a spring xml file
 
-	/**
-	 * units/measurement for duration specified in {@link #expirationTime()}
-	 */
-	Time unit() default Time.UNSET; // NOTE: the real default value is configured in a spring xml file
+    /**
+     * units/measurement for duration specified in {@link #expirationTime()}
+     */
+    Time unit() default Time.UNSET; // NOTE: the real default value is configured in a spring xml file
 }

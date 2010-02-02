@@ -19,7 +19,6 @@ import java.util.List;
 
 import com.googlecode.easiest.cache.ever.MethodCall;
 
-
 /**
  * Interface to allow various cache key-generation
  * strategies
@@ -27,28 +26,28 @@ import com.googlecode.easiest.cache.ever.MethodCall;
  * @author Brad Cupit
  */
 public interface KeyGenerator {
-	/**
-	 * Generates a unique method key for the method being executed.
-	 * If the cache were implemented as a Map of Maps, this key would
-	 * be the key for the first Map.
-	 * 
-	 * If the cache were implemented as a Map of Maps, this key would
-	 * be the first key. Psuedo-cache definition:
-	 * Map<MethodKey, Map<ParameterKey, CachedData>>
-	 */
-	String generateMethodKey(MethodCall methodCall);
+    /**
+     * Generates a unique method key for the method being executed.
+     * If the cache were implemented as a Map of Maps, this key would
+     * be the key for the first Map.
+     * 
+     * If the cache were implemented as a Map of Maps, this key would
+     * be the first key. Psuedo-cache definition:
+     * Map<MethodKey, Map<ParameterKey, CachedData>>
+     */
+    String generateMethodKey(MethodCall methodCall);
 
-	/**
-	 * Generates a unique parameter key (or null for 0 parameter methods)
-	 * for the parameters passed in when the current method was invoked.
-	 * 
-	 * We cache the result based on the parameters passed in (so we
-	 * only return the cached result if the method is being called again
-	 * with the same parameters).
-	 * 
-	 * If the cache were implemented as a Map of Maps, this key would
-	 * be the second key. Psuedo-cache definition:
-	 * Map<MethodKey, Map<ParameterKey, CachedData>>
-	 */
-	String generateParameterKey(List<?> arguments);
+    /**
+     * Generates a unique parameter key (or null for 0 parameter methods)
+     * for the parameters passed in when the current method was invoked.
+     * 
+     * We cache the result based on the parameters passed in (so we
+     * only return the cached result if the method is being called again
+     * with the same parameters).
+     * 
+     * If the cache were implemented as a Map of Maps, this key would
+     * be the second key. Psuedo-cache definition:
+     * Map<MethodKey, Map<ParameterKey, CachedData>>
+     */
+    String generateParameterKey(List<?> arguments);
 }

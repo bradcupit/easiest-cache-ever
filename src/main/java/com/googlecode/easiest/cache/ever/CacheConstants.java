@@ -21,10 +21,10 @@ package com.googlecode.easiest.cache.ever;
  * @author Brad Cupit
  */
 public class CacheConstants {
-	private CacheConstants() {
-	}
+    private CacheConstants() {
+    }
 
-	public static final int NO_EXPIRATION = -1;
-	public static final int UNSET_MAX_SIZE = -1000;
-	public static final int UNSET_EXPIRATION_TIME = -1001;
+    public static final int NO_EXPIRATION = -1;
+    public static final int UNSET_MAX_SIZE = -1000;
+    public static final int UNSET_EXPIRATION_TIME = -1001;
 }

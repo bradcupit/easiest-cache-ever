@@ -22,7 +22,6 @@ import com.googlecode.easiest.cache.ever.MethodCall;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 
-
 /**
  * Default, out-of-the-box implementation of {@link KeyGenerator}.
  * This implementation generates extremely unique keys, at the
@@ -35,65 +34,65 @@ import com.thoughtworks.xstream.io.xml.CompactWriter;
  * @author Brad Cupit
  */
 public class DefaultKeyGenerator implements KeyGenerator {
-	private XStream xstream;
+    private XStream xstream;
 
-	public void setXstream(XStream xstream) {
-		this.xstream = xstream;
-	}
+    public void setXstream(XStream xstream) {
+        this.xstream = xstream;
+    }
 
-	/**
-	 * Generates a unique method key for the method being executed.
-	 * If the cache were implemented as a Map of Maps, this key would
-	 * be the key for the first Map.
-	 * 
-	 * If the cache were implemented as a Map of Maps, this key would
-	 * be the first key. Psuedo-cache definition:
-	 * Map<MethodKey, Map<ParameterKey, CachedData>>
-	 * 
-	 * Example keys:
-	 * com.fully.qualified.ClassName.noParamsMethod
-	 * com.fully.qualified.ClassName.oneParamMethod(java.lang.String)
-	 * com.fully.qualified.ClassName.twoParamMethod(com.fully.qualified.ParameterName,com.fully.qualified.ParameterName)
-	*/
-	public String generateMethodKey(MethodCall methodCall) {
-		return methodCall.getFullMethodNameWithParameters();
-	}
+    /**
+     * Generates a unique method key for the method being executed.
+     * If the cache were implemented as a Map of Maps, this key would
+     * be the key for the first Map.
+     * 
+     * If the cache were implemented as a Map of Maps, this key would
+     * be the first key. Psuedo-cache definition:
+     * Map<MethodKey, Map<ParameterKey, CachedData>>
+     * 
+     * Example keys:
+     * com.fully.qualified.ClassName.noParamsMethod
+     * com.fully.qualified.ClassName.oneParamMethod(java.lang.String)
+     * com.fully.qualified.ClassName.twoParamMethod(com.fully.qualified.ParameterName,com.fully.qualified.ParameterName)
+    */
+    public String generateMethodKey(MethodCall methodCall) {
+        return methodCall.getFullMethodNameWithParameters();
+    }
 
-	/**
-	 * Generates a unique parameter key (or null for 0 parameter methods)
-	 * for the parameters passed in when the current method was invoked.
-	 * 
-	 * We cache the result based on the parameters passed in (so we
-	 * only return the cached result if the method is being called again
-	 * with the same parameters).
-	 * 
-	 * If the cache were implemented as a Map of Maps, this key would
-	 * be the second key. Psuedo-cache definition:
-	 * Map<MethodKey, Map<ParameterKey, CachedData>>
-	 * 
-	 * Example keys:
-	 * (0 parameters)			null
-	 * (1 simple parameter)		<string>value</string>
-	 * (2 complex parameters)	<object-array><com.fully.qualified.ParameterName><field>value1</field></com.fully.qualified.ParameterName><com.fully.qualified.ParameterName><field>value2</field></com.fully.qualified.ParameterName></object-array>
-	 */
-	public String generateParameterKey(List<?> parameters) {
-		if (parameters.size() == 0) {
-			return null;
-		} else {
-			Object dataToSerialze;
+    /**
+     * Generates a unique parameter key (or null for 0 parameter methods)
+     * for the parameters passed in when the current method was invoked.
+     * 
+     * We cache the result based on the parameters passed in (so we
+     * only return the cached result if the method is being called again
+     * with the same parameters).
+     * 
+     * If the cache were implemented as a Map of Maps, this key would
+     * be the second key. Psuedo-cache definition:
+     * Map<MethodKey, Map<ParameterKey, CachedData>>
+     * 
+     * Example keys:
+     * (0 parameters)			null
+     * (1 simple parameter)		<string>value</string>
+     * (2 complex parameters)	<object-array><com.fully.qualified.ParameterName><field>value1</field></com.fully.qualified.ParameterName><com.fully.qualified.ParameterName><field>value2</field></com.fully.qualified.ParameterName></object-array>
+     */
+    public String generateParameterKey(List<?> parameters) {
+        if (parameters.size() == 0) {
+            return null;
+        } else {
+            Object dataToSerialze;
 
-			if (parameters.size() == 1) {
-				// small optimization for 1 param methods
-				dataToSerialze = parameters.get(0);
-			} else {
-				dataToSerialze = parameters.toArray();
-			}
+            if (parameters.size() == 1) {
+                // small optimization for 1 param methods
+                dataToSerialze = parameters.get(0);
+            } else {
+                dataToSerialze = parameters.toArray();
+            }
 
-			CharArrayWriter charArrayWriter = new CharArrayWriter();
-			CompactWriter compactWriter = new CompactWriter(charArrayWriter);
-			xstream.marshal(dataToSerialze, compactWriter);
+            CharArrayWriter charArrayWriter = new CharArrayWriter();
+            CompactWriter compactWriter = new CompactWriter(charArrayWriter);
+            xstream.marshal(dataToSerialze, compactWriter);
 
-			return charArrayWriter.toString();
-		}
-	}
+            return charArrayWriter.toString();
+        }
+    }
 }
