@@ -1,0 +1,13 @@
+#summary questions I just made up
+
+*Why does this require Spring or AspectJ?*
+
+easiest-cache-ever uses AOP (Aspect Oriented Programming), so you have to do very little work to enable caching. A plain annotation on a method doesn't really do much on it's own. The smarts are in the code which processes the annotation, and how will that smart code have access to your method which need caching? The answer is AOP, and the simplest way to setup AOP is through Spring. If you want to get fancy, you can use AspectJ (a new language based off Java that makes Aspects a first class citizen). The middle ground is an AspectJ load-time-weaver.
+
+*What is an AspectJ load-time-weaver?*
+
+*Why isn't caching working?*
+
+Is Spring/AspectJ caching setup properly? See the migration guide for help.
+If using Spring AOP, are you calling a non-public method? Only public methods are supported with Spring AOP. You may want to try load-time-weaving, or make your method public.
+With Spring AOP, are you calling a method within your own class? Spring AOP can only intercept calls from one object to another. It can't intercept calls from one object to itself, or from one object to it's super/subclasses. You may want to try load-time-weaving, or refactor your code so it's two separate objects.
