@@ -1,11 +1,11 @@
 #summary How to set easiest-cache-ever up
 
-=Spring Setup=
+==Spring Setup==
 
 Note: with the Spring setup, only public methods can be cache-enabled. Furthermore, when one method in a class calls a public method in itself (or it's subclasses) that cannot be cache-enabled either.
 
 TODO
 
-=AspectJ setup=
+==AspectJ setup==
 
 TODO
