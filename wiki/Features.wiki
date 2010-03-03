@@ -1,0 +1,29 @@
+#summary Demo of the features
+
+==Input Parameters==
+You can pass in a parameter, and the cache will be based on those inputs:
+{{{
+@CacheReturnValue
+public User findUser(String name) {
+    // perform some long operation
+}
+}}}
+{{{
+findUser("Elmo");   // not found in cache
+findUser("Grover"); // not found in cache
+findUser("Elmo");   // found in cache!
+}}}
+
+==Set max size==
+Cache 5 items, no more. After that, the least recently used item is kicked out.
+{{{
+@CacheReturnValue(maxSize = 5)
+public User lookupUser(String name) { ... }
+}}}
+
+==Expire by time==
+Expire items after 5 minutes
+{{{
+@CacheReturnValue(time = "5", unit = TimeUnit.MINUTES)
+public User lookupUser() { ... }
+}}}
