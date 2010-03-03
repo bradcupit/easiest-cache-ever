@@ -1,9 +1,9 @@
 #summary questions I just made up
 
-  # [#Which_license_is_this_released_under?]
-  # [#Why_does_this_require_Spring_or_AspectJ?]
-  # [#What_is_an_AspectJ_load-time-weaver?]
-  # [#Why_isn't_caching_working?]
+  # [#Which_license_is_this_released_under? Which license is this released under?]
+  # [#Why_does_this_require_Spring_or_AspectJ? Why does this require Spring or AspectJ?]
+  # [#What_is_an_AspectJ_load-time-weaver? What is an AspectJ load-time-weaver?]
+  # [#Why_isn't_caching_working? Why isn't caching working?]
 
 ===Which license is this released under?===
 The Apache License 2.0, which basically says you can use this library or it's source code in any project (even commercial ones). You accept the code as-is, and can't sue me if something goes wrong. If you distribute the code or compiled files, or the jar (whether you modified it or not), you must include a copy of the license. If you just distribute the jar, it already includes the license in the jar, so you don't have to do anything.
