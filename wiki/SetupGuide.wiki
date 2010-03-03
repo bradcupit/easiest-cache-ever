@@ -1,4 +1,4 @@
-#summary How to set easiest-cache-ever up
+#summary How to setup easiest-cache-ever
 
 ==Spring Setup==
 
