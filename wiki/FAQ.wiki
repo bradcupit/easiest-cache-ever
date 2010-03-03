@@ -1,6 +1,6 @@
 #summary questions I just made up
 
-  # [#Which license is this released under?]
+  # [FAQ#Which license is this released under?]
 
 ===Which license is this released under?===
 The Apache License 2.0, which basically says you can use this library or it's source code in any project (even commercial ones). You accept the code as-is, and can't sue me if something goes wrong. If you distribute the code or compiled files, or the jar (whether you modified it or not), you must include a copy of the license. If you just distribute the jar, it already includes the license in the jar, so you don't have to do anything.
