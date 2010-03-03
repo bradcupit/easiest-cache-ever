@@ -1,4 +1,4 @@
-#summary Frequently Asked Question (or questions I just made up)
+#summary Frequently Asked Questions (or questions I just made up)
 
 *Why does this require Spring or AspectJ?*
 
