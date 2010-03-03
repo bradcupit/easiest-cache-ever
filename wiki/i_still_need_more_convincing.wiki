@@ -57,7 +57,7 @@ Each chunk of code sure does look similar, doesn't it. Plus, the caching actuall
 
 Also, what if we wanted something with a little more functionality? What about a cache that expired entries after a set amount of time? Or what about a cache that had a maximum size, and kicked out the oldest entry when that max was reached?
 
-For size-based, we could use [http://commons.apache.org/collections/ Apache Commons Collection]'s [http://commons.apache.org/collections/api-release/org/apache/commons/collections/map/LRUMap.html LRUMap] (or a version supporting generics [http://larvalabs.com/collections/ here]). For time-based we can use [http://code.google.com/p/guava-libraries/ Google's Guava] (formerly known as Google Collections) [http://guava-libraries.googlecode.com/svn/trunk/javadoc/index.html MapMaker], which can build a map with an expiration time.
+For size-based, we could use [http://commons.apache.org/collections/ Apache Commons Collection's] [http://commons.apache.org/collections/api-release/org/apache/commons/collections/map/LRUMap.html LRUMap] (or a version supporting generics [http://larvalabs.com/collections/ here]). For time-based we can use [http://code.google.com/p/guava-libraries/ Google Guava's] (formerly known as Google Collections) [http://guava-libraries.googlecode.com/svn/trunk/javadoc/index.html MapMaker], which can build a map with an expiration time.
 
 But what if we need both time-based and size-based? We'd have to write one ourselves, and it turns out that's hard to make thread-safe.
 
