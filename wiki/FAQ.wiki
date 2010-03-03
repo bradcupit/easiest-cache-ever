@@ -1,12 +1,19 @@
 #summary questions I just made up
 
-*Why does this require Spring or AspectJ?*
+  # [#Which license is this released under?]
 
+===Which license is this released under?===
+The Apache License 2.0, which basically says you can use this library or it's source code in any project (even commercial ones). You accept the code as-is, and can't sue me if something goes wrong. If you distribute the code or compiled files, or the jar (whether you modified it or not), you must include a copy of the license. If you just distribute the jar, it already includes the license in the jar, so you don't have to do anything.
+
+For more information, see this [http://www.apache.org/foundation/licence-FAQ.html#WhatDoesItMEAN page].
+
+===Why does this require Spring or AspectJ?===
 easiest-cache-ever uses AOP (Aspect Oriented Programming), so you have to do very little work to enable caching. A plain annotation on a method doesn't really do much on it's own. The smarts are in the code which processes the annotation, and how will that smart code have access to your method which need caching? The answer is AOP, and the simplest way to setup AOP is through Spring. If you want to get fancy, you can use AspectJ (a new language based off Java that makes Aspects a first class citizen). The middle ground is an AspectJ load-time-weaver.
 
-*What is an AspectJ load-time-weaver?*
+===What is an AspectJ load-time-weaver?===
+TODO
 
-*Why isn't caching working?*
+===Why isn't caching working?===
 
 Is Spring/AspectJ caching setup properly? See the migration guide for help.
 If using Spring AOP, are you calling a non-public method? Only public methods are supported with Spring AOP. You may want to try load-time-weaving, or make your method public.
