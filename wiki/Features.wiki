@@ -24,6 +24,6 @@ public User lookupUser(String name) { ... }
 ==Expire by time==
 Expire items after 5 minutes
 {{{
-@CacheReturnValue(time = "5", unit = TimeUnit.MINUTES)
+@CacheReturnValue(expirationTime = 5, unit = TimeUnit.MINUTES)
 public User lookupUser() { ... }
 }}}
