@@ -1,4 +1,4 @@
-#summary Still need more convincing to use easiest-cache-ever? Then read this page.
+#summary Still need more convincing to use easiest-cache-ever? Read this page.
 
 == Why not just manually cache? ==
 Good question. A manual cache is fairly easy to implement.
@@ -71,6 +71,6 @@ That code is beginning to look a little cumbersome, especially if we'll be using
 
 Since what we want is so simple, we should have a very simple way of using it. Enter easiest-cache-ever, where you can get a super-easy, read-only cache in just one line of code:
 {{{
-@CacheReturnValue(maxSize = 500, expirationTime = "5", unit = TimeUnit.MINUTES)
+@CacheReturnValue(maxSize = 500, expirationTime = 5, unit = TimeUnit.MINUTES)
 public String someMethod() { ... }
 }}}
