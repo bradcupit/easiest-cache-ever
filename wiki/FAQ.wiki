@@ -4,7 +4,7 @@
   # [#Why_does_this_require_Spring_or_AspectJ? Why does this require Spring or AspectJ?]
   # [#Why_isn't_caching_working? Why isn't caching working?]
   # [#What_is_an_AspectJ_load-time_weaver? What is an AspectJ load-time weaver?]
-  # [#===Why_use_easiest-cache-ever_when_I_already_have_a_Hibernate/JPA_cache? Why use easiest-cache-ever when I already have a Hibernate/JPA cache?]
+  # [#Why_use_easiest-cache-ever_when_I_already_have_a_Hibernate/JPA_c Why use easiest-cache-ever when I already have a Hibernate/JPA cache?]
 
 ===Which license is this released under?===
 The Apache License 2.0, which basically says you can use this library or it's source code in any project (even commercial ones). You accept the code as-is, and can't sue me if something goes wrong. If you distribute the code or compiled files, or the jar (whether you modified it or not), you must include a copy of the license. If you just distribute the jar, it already includes the license in the jar, so you don't have to do anything.
