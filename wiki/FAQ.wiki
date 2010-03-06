@@ -24,3 +24,9 @@ With Spring AOP, are you calling a method within your own class? Spring AOP can 
 
 ===Why use easiest-cache-ever when I already have a Hibernate/JPA cache?===
 If you're already using Hibernate's 2nd level cache, you may not need this project. However, easiest-cache-ever is more than just a database cache. It can cache any call, like a webservice call, a long running computation, an XPath query, etc.
+
+===What is an AspectJ load-time weaver?===
+TODO
+
+===Can I get commit access?===
+TODO
