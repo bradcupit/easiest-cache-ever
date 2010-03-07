@@ -1,4 +1,5 @@
 #summary Demo of the features
+#labels Featured
 
 ==Input Parameters==
 You can pass in a parameter, and the cache will be based on those inputs:
