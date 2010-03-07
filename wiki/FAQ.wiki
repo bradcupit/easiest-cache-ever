@@ -5,6 +5,8 @@
   # [#Why_isn't_caching_working? Why isn't caching working?]
   # [#What_is_an_AspectJ_load-time_weaver? What is an AspectJ load-time weaver?]
   # [#Why_use_easiest-cache-ever_when_I_already_have_a_Hibernate/JPA_c Why use easiest-cache-ever when I already have a Hibernate/JPA cache?]
+  # [What_is_a_load-time_weaver? What is a load-time weaver?]
+  # [Can_I_get_commit_access? Can I get commit access?]
 
 ===Which license is this released under?===
 The Apache License 2.0, which basically says you can use this library or it's source code in any project (even commercial ones). You accept the code as-is, and can't sue me if something goes wrong. If you distribute the code or compiled files, or the jar (whether you modified it or not), you must include a copy of the license. If you just distribute the jar, it already includes the license in the jar, so you don't have to do anything.
@@ -25,7 +27,7 @@ With Spring AOP, are you calling a method within your own class? Spring AOP can 
 ===Why use easiest-cache-ever when I already have a Hibernate/JPA cache?===
 If you're already using Hibernate's 2nd level cache, you may not need this project. However, easiest-cache-ever is more than just a database cache. It can cache any call, like a webservice call, a long running computation, an XPath query, etc.
 
-===What is an AspectJ load-time weaver?===
+===What is a load-time weaver?===
 TODO
 
 ===Can I get commit access?===
