@@ -1,4 +1,5 @@
 #summary Still need more convincing to use easiest-cache-ever? Read this page.
+#labels Featured
 
 == Why not just manually cache? ==
 Good question. A manual cache is fairly easy to implement.
