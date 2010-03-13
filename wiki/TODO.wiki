@@ -1,7 +1,6 @@
 #summary items that should be done
 
   * wiki documentation
-    * ehcache code example
   * manual test projects
     * Spring AOP
     * AspectJ load-time weaving
