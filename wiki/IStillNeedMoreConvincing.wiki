@@ -65,7 +65,13 @@ But what if we need both time-based and size-based? We'd have to write one ourse
 We could use an existing cache, like [http://ehcache.org/ ehcache], which would give us both time limits and size limits:
 
 {{{
-<ehcache example here>
+CacheManager cacheManager = CacheManager.create();
+cacheManager.addCache(new Cache("cacheName", MAX_ELEMENTS_IS_FIVE_HUNDRED, false, false, FIVE_MINUTES, 0));
+}}}
+{{{
+Cache cache = cacheManager.getCache("cacheName");
+Element element = cache.get("key");
+String value = (String) element.getValue();
 }}}
 
 That code is beginning to look a little cumbersome, especially if we'll be using it over and over again. Ehcache also supports xml configuration, which might make this code look much better, but then we still have to write the xml.
