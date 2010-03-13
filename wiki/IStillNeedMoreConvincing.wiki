@@ -65,18 +65,18 @@ But what if we need both time-based and size-based? We'd have to write one ourse
 We could use an existing cache, like [http://ehcache.org/ ehcache], which would give us both time limits and size limits:
 
 {{{
-CacheManager cacheManager = CacheManager.create();
 cacheManager.addCache(new Cache("cacheName", MAX_ELEMENTS_IS_FIVE_HUNDRED, false, false, FIVE_MINUTES, 0));
-}}}
-{{{
+
+...
+
 Cache cache = cacheManager.getCache("cacheName");
 Element element = cache.get("key");
 String value = (String) element.getValue();
 }}}
 
-That code is beginning to look a little cumbersome, especially if we'll be using it over and over again. Ehcache also supports xml configuration, which might make this code look much better, but then we still have to write the xml.
+That code is more cumbersome then just using a Map. Ehcache also supports xml configuration, which might make the Cache creation look better, but then we have switch to another file to configure each cache.
 
-Since what we want is so simple, we should have a very simple way of using it. Enter easiest-cache-ever, where you can get a super-easy, read-only cache in just one line of code:
+Since what we want is so simple, we should have a very simple way of using it. With easiest-cache-ever you can get a super-easy, read-only cache in just one line of code:
 {{{
 @CacheReturnValue(maxSize = 500, expirationTime = 5, unit = TimeUnit.MINUTES)
 public String someMethod() { ... }
