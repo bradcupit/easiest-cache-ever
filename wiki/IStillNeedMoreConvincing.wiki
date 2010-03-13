@@ -89,5 +89,5 @@ That code is more cumbersome then just using a Map. Ehcache also supports xml co
 Since what we want is so simple, we should have a very simple way of using it. With easiest-cache-ever you get a super-easy, read-only cache in just one line of code:
 {{{
 @CacheReturnValue(maxSize = 500, expirationTime = 5, unit = TimeUnit.MINUTES)
-public String someMethod() { ... }
+public User findUser() { ... }
 }}}
