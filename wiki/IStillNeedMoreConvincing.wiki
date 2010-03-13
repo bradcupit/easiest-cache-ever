@@ -84,7 +84,7 @@ public User findUser(String name) {
 }
 }}}
 
-That code is more cumbersome then just using a Map. Ehcache also supports xml configuration, which might make the Cache creation look better, but then we have switch to another file to configure each cache.
+That code is more cumbersome then just using a Map. Ehcache also supports xml configuration, which might make the Cache creation look better, but then we have switch to another file to configure each cache, and we would still have to write the cumbersome code in the findUser(..) method.
 
 Since what we want is so simple, we should have a very simple way of using it. With easiest-cache-ever you can get a super-easy, read-only cache in just one line of code:
 {{{
