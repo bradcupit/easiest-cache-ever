@@ -67,6 +67,8 @@ We could use an existing cache, like [http://ehcache.org/ ehcache], which would 
 {{{
 cacheManager.addCache(new Cache(USER_CACHE, MAX_ELEMENTS_IS_FIVE_HUNDRED, false, false, FIVE_MINUTES, 0));
 
+...
+
 public User findUser(String name) {
     Cache cache = cacheManager.getCache(USER_CACHE);
     Element element = cache.get(name);
