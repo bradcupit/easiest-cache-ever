@@ -9,7 +9,7 @@ private Map<String, User> userCache = new HashMap<String, User>();
 public User findUser(String name) {
     User user = userCache.get(name);
     if (user == null) {
-        user = // get the user somehow
+        user = someLongOperation();
         userCache.put(name, user);
     }
 
@@ -26,7 +26,7 @@ private Map<String, Process> processCache = new HashMap<String, Process>();
 public User findUser(String name) {
     User user = userCache.get(name);
     if (user == null) {
-        user = // get the user somehow
+        user = someLongOperation();
         userCache.put(name, user);
     }
 
@@ -36,7 +36,7 @@ public User findUser(String name) {
 public User findAdmin(String name) {
     Admin admin = adminCache.get(name);
     if (admin == null) {
-        admin = // get the admin somehow
+        admin = someLongOperation();
         adminCache.put(name, admin);
     }
 
@@ -46,7 +46,7 @@ public User findAdmin(String name) {
 public User findProcess(String name) {
     Process process = processCache.get(name);
     if (process == null) {
-        process = // get the process somehow
+        process = someLongOperation();
         processCache.put(name, process);
     }
 
@@ -65,13 +65,21 @@ But what if we need both time-based and size-based? We'd have to write one ourse
 We could use an existing cache, like [http://ehcache.org/ ehcache], which would give us both time limits and size limits:
 
 {{{
-cacheManager.addCache(new Cache("cacheName", MAX_ELEMENTS_IS_FIVE_HUNDRED, false, false, FIVE_MINUTES, 0));
+cacheManager.addCache(new Cache(USER_CACHE, MAX_ELEMENTS_IS_FIVE_HUNDRED, false, false, FIVE_MINUTES, 0));
 
-...
+public User findUser(String name) {
+    Cache cache = cacheManager.getCache(USER_CACHE);
+    Element element = cache.get(name);
+    User user;
+    if (element != null) {
+        user = (User) element.getValue();
+    } else {
+        user = someLongOperation();
+        cache.put(new Element(name, user));
+    }
 
-Cache cache = cacheManager.getCache("cacheName");
-Element element = cache.get("key");
-String value = (String) element.getValue();
+    return user;
+}
 }}}
 
 That code is more cumbersome then just using a Map. Ehcache also supports xml configuration, which might make the Cache creation look better, but then we have switch to another file to configure each cache.
