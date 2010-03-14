@@ -26,7 +26,7 @@ import org.junit.Test;
  */
 public class TimeTest {
     @Test
-    public void convertToSeconds() throws Exception {
+    public void toSecondsShouldCorrectlyConvertTIme() throws Exception {
         assertEquals(1, Time.NANOSECONDS.toSeconds(1000 * 1000 * 1000));
         assertEquals(1, Time.MICROSECONDS.toSeconds(1000 * 1000));
         assertEquals(1, Time.MILLISECONDS.toSeconds(1000));
@@ -38,7 +38,7 @@ public class TimeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void toSecondsThrowsForUnset() throws Exception {
+    public void toSecondShouldThrowForUnset() throws Exception {
         Time.UNSET.toSeconds(0);
     }
 }

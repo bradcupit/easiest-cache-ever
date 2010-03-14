@@ -15,6 +15,8 @@
  */
 package com.googlecode.easiest.cache.ever;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
@@ -23,6 +25,7 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import com.googlecode.easiest.cache.ever.caches.CacheService;
 import com.googlecode.easiest.cache.ever.caches.CachedValue;
@@ -57,69 +60,126 @@ public class CacheAspectTest {
     }
 
     @Test
-    public void runsMethodAndCachesResults() throws Throwable {
+    public void aroundAdviceForMethodAnnotationShouldInvokeMethodWhenReturnValueNotYetCached() throws Throwable {
         setupMocksForZeroInputParamCacheMethod();
         Object objectToCache = new Object();
 
         when(mockJoinPoint.proceed()).thenReturn(objectToCache);
         when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(CachedValue.notFound());
 
-        cacheAspect.setKeyGenerator(new DefaultKeyGenerator());
+        cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
+
+        verify(mockJoinPoint).proceed();
+    }
+
+    @Test
+    public void aroundAdviceForMethodAnnotationShouldCacheReturnValueWhenNotYetCached() throws Throwable {
+        setupMocksForZeroInputParamCacheMethod();
+        Object objectToCache = new Object();
+
+        when(mockJoinPoint.proceed()).thenReturn(objectToCache);
+        when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(CachedValue.notFound());
+
         cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
 
         verify(mockCacheService).add(fullMethodName, null, objectToCache);
     }
 
     @Test
-    public void doesNotRunMethodWhenResultIsAlreadyCached() throws Throwable {
+    public void aroundAdviceForMethodAnnotationShouldNotInvokeMethodWhenReturnValueAlreadyCached() throws Throwable {
         setupMocksForZeroInputParamCacheMethod();
         when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(cachedValue);
 
-        cacheAspect.setKeyGenerator(new DefaultKeyGenerator());
         cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
 
-        verify(mockCacheService).retrieve(fullMethodName, null);
         verify(mockJoinPoint, never()).proceed();
-        verify(mockCacheService, never()).add(anyString(), anyString(), anyObject());
     }
 
     @Test
-    public void canOverrideCacheDefaults() throws Throwable {
-        setupMocksForOneInputParamCacheMethod();
+    public void aroundAdviceForMethodAnnotationShouldNotCacheReturnValueWhenAlreadyCached() throws Throwable {
+        setupMocksForZeroInputParamCacheMethod();
         when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(cachedValue);
-
-        when(mockCacheAnnotation.maxSize()).thenReturn(CacheConstants.UNSET_MAX_SIZE);
-        when(mockCacheAnnotation.expirationTime()).thenReturn(CacheConstants.UNSET_EXPIRATION_TIME);
-        when(mockCacheAnnotation.unit()).thenReturn(Time.UNSET);
-
-        int expectedMaxSize = 1200;
-        int expectedExpirationTime = -52;
-        Time expectedUnit = Time.MICROSECONDS;
-
-        cacheAspect.setDefaultMaxSize(expectedMaxSize);
-        cacheAspect.setDefaultExpirationTime(expectedExpirationTime);
-        cacheAspect.setDefaultUnit(expectedUnit);
 
         cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
 
-        CacheConfig expectedCacheConfig = new CacheConfig(expectedMaxSize, expectedExpirationTime, expectedUnit);
-        verify(mockCacheService).createCacheIfNecessary(anyString(), refEq(expectedCacheConfig));
+        verify(mockCacheService, never()).add(anyString(), anyString(), anyObject());
     }
 
     /**
+     * prove the users can set defaults via Spring xml config
+     */
+    @Test
+    public void setDefaultMaxSizeShouldShouldOverrideTheDefaultSetting() throws Throwable {
+        setupMocksForOneInputParamCacheMethod();
+        when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(cachedValue);
+        when(mockCacheAnnotation.maxSize()).thenReturn(CacheConstants.UNSET_MAX_SIZE);
+
+        int expectedMaxSize = 1200;
+        cacheAspect.setDefaultMaxSize(expectedMaxSize);
+
+        cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
+        ArgumentCaptor<CacheConfig> argument = ArgumentCaptor.forClass(CacheConfig.class);
+        verify(mockCacheService).createCacheIfNecessary(anyString(), argument.capture());
+        assertThat(argument.getValue().getMaxSize(), is(expectedMaxSize));
+    }
+
+    /**
+     * prove the users can set defaults via Spring xml config
+     */
+    @Test
+    public void setDefaultExpirationTimeShouldShouldOverrideTheDefaultSetting() throws Throwable {
+        setupMocksForOneInputParamCacheMethod();
+        when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(cachedValue);
+        when(mockCacheAnnotation.expirationTime()).thenReturn(CacheConstants.UNSET_EXPIRATION_TIME);
+
+        int expectedExpirationTime = 52;
+        cacheAspect.setDefaultExpirationTime(expectedExpirationTime);
+
+        cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
+        ArgumentCaptor<CacheConfig> argument = ArgumentCaptor.forClass(CacheConfig.class);
+        verify(mockCacheService).createCacheIfNecessary(anyString(), argument.capture());
+        assertThat(argument.getValue().getExpirationTime(), is(expectedExpirationTime));
+    }
+
+    /**
+     * prove the users can set defaults via Spring xml config
+     */
+    @Test
+    public void setDefaultUnitShouldShouldOverrideTheDefaultSetting() throws Throwable {
+        setupMocksForOneInputParamCacheMethod();
+        when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(cachedValue);
+        when(mockCacheAnnotation.unit()).thenReturn(Time.UNSET);
+
+        Time expectedUnit = Time.MICROSECONDS;
+        cacheAspect.setDefaultUnit(expectedUnit);
+
+        cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
+        ArgumentCaptor<CacheConfig> argument = ArgumentCaptor.forClass(CacheConfig.class);
+        verify(mockCacheService).createCacheIfNecessary(anyString(), argument.capture());
+        assertThat(argument.getValue().getUnit(), is(expectedUnit));
+    }
+
+    /**
+     * This test ensures our cache names are unique and that two separate methods (which
+     * happen to implement the same interface) still get unique cache names (and therefore
+     * unique caches with separate settings). We accomplish with this pattern:
+     * fully.qualified.ConcreteClassName.methodName (we cannot use the fully qualified
+     * interface name).
+     * 
      * {@link Signature#getDeclaringTypeName()} on a JDK proxy returns
      * the interface name not the concrete class name, so we use {@link ProceedingJoinPoint#getTarget()}.getClass().getName()
      * instead. A similar thing happens for {@link MethodSignature#getMethod()} with
      * JDK proxies vs CGLIB proxies.
      */
     @Test
-    public void createsMethodCallWithConcreteClassNameNotInterfaceName() throws Throwable {
+    public void aroundAdviceForMethodAnnotationShouldGenerateCacheNameWithConcreteClassNameNotInterfaceName() throws Throwable {
         setupMocksForZeroInputParamCacheMethod();
         when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(cachedValue);
 
         String fullMethodNameOnConcreteClass = TestClass.class.getName() + "." + methodName;
         String fullMethodNameOnInterface = TestInterface.class.getName() + "." + methodName;
 
+        // setup AspectJ's MethodSignature to behave like it does in a real AOP setting
         when(mockMethodSignature.getName()).thenReturn(methodName);
         when(mockMethodSignature.getDeclaringTypeName()).thenReturn(fullMethodNameOnInterface);
 
@@ -135,26 +195,30 @@ public class CacheAspectTest {
      * of configuration.
      */
     @Test
-    public void maxSizeIsOneForZeroParamMethods() throws Throwable {
+    public void aroundAdviceForMethodAnnotationShouldSetMaxSizeToOneForZeroParamMethods() throws Throwable {
         setupMocksForZeroInputParamCacheMethod();
 
+        int one = 1;
+        int somethingOtherThanOne = 1000;
+
         when(mockCacheService.retrieve(anyString(), anyString())).thenReturn(cachedValue);
-        when(mockCacheAnnotation.maxSize()).thenReturn(1000);
+        when(mockCacheAnnotation.maxSize()).thenReturn(somethingOtherThanOne);
 
         cacheAspect.aroundAdviceForMethodAnnotation(mockJoinPoint, mockCacheAnnotation);
-
-        CacheConfig expectedCacheConfig = new CacheConfig(1, 0, null);
-        verify(mockCacheService).createCacheIfNecessary(anyString(), refEq(expectedCacheConfig));
+        ArgumentCaptor<CacheConfig> argument = ArgumentCaptor.forClass(CacheConfig.class);
+        verify(mockCacheService).createCacheIfNecessary(anyString(), argument.capture());
+        assertThat(argument.getValue().getMaxSize(), is(one));
     }
 
     /**
      * {@link CacheService#retrieve(String, String)} used to
      * return null when the value was not in cache AND when
-     * the value was cached but was null. So, cached 'null' was same
-     * as an uncached value. This test proves that inefficiency is gone.
+     * the value was cached but was null. So, cached 'null' was the same
+     * as an uncached value (and would incorrectly invoke the method again).
+     * This test proves that inefficiency is gone.
      */
     @Test
-    public void doesNotInvokeJoinPointWhenNullWasCached() throws Throwable {
+    public void aroundAdviceForMethodAnnotationShouldNotInvokeMethodWhenNullWasCached() throws Throwable {
         setupMocksForZeroInputParamCacheMethod();
 
         CachedValue nullValue = CachedValue.create(null);
@@ -186,9 +250,19 @@ public class CacheAspectTest {
         when(mockMethodSignature.getName()).thenReturn(methodName);
     }
 
+    /**
+     * utility test class
+     * 
+     * @author Brad Cupit
+     */
     public static class TestClass implements TestInterface {
     }
 
+    /**
+     * utility test interface
+     * 
+     * @author Brad Cupit
+     */
     public interface TestInterface {
     }
 }

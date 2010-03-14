@@ -15,8 +15,8 @@
  */
 package com.googlecode.easiest.cache.ever.caches;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;
@@ -32,11 +32,13 @@ import java.util.concurrent.TimeUnit;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 import net.sf.ehcache.ObjectExistsException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.googlecode.easiest.cache.ever.CacheConfig;
 import com.googlecode.easiest.cache.ever.CacheConstants;
@@ -59,11 +61,13 @@ public class DefaultCacheServiceTest {
     private final CacheManager ehCacheManager = new CacheManager();
     private DefaultCacheService cacheService;
     private final CacheManager mockEhcacheManager = mock(CacheManager.class);
+    private final Ehcache mockEhcache = mock(Ehcache.class);
 
     @Before
     public void before() {
         cacheService = new DefaultCacheService();
         cacheService.setCloner(new Cloner());
+        cacheService.setEhcacheManager(ehCacheManager);
     }
 
     @After
@@ -72,15 +76,15 @@ public class DefaultCacheServiceTest {
     }
 
     @Test
-    public void createsNewCacheWhenCacheIdNotFound() throws Exception {
+    public void createCacheIfNecessaryShouldCreateNewCacheWhenCacheIdNotFound() throws Exception {
         cacheService.setEhcacheManager(mockEhcacheManager);
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
-        verify(mockEhcacheManager).addCache(any(Ehcache.class));
+        verify(mockEhcacheManager).addCache(Mockito.any(Ehcache.class));
     }
 
     @Test
-    public void doesNotCreateCacheWhenItAlreadyExists() throws Exception {
+    public void createCacheIfNecessaryShouldNotCreateCacheWhenItAlreadyExists() throws Exception {
         when(mockEhcacheManager.cacheExists(cacheId)).thenReturn(true);
 
         cacheService.setEhcacheManager(mockEhcacheManager);
@@ -92,33 +96,32 @@ public class DefaultCacheServiceTest {
     }
 
     @Test
-    public void removesLeastRecentlyUsedItemWhenMaxSizeReached() throws Exception {
-        CacheConfig cacheConfig = new CacheConfig(1, CacheConstants.NO_EXPIRATION, null);
-        cacheService.setEhcacheManager(ehCacheManager);
+    public void retrieveShouldRemoveLeastRecentlyUsedItemWhenMaxSizeReached() throws Exception {
+        int oneItemMax = 1;
+        CacheConfig cacheConfig = new CacheConfig(oneItemMax, CacheConstants.NO_EXPIRATION, null);
+
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
         String firstCacheKey = "1";
         String firstCachedValue = "1st val to be cached";
         cacheService.add(cacheId, firstCacheKey, firstCachedValue);
-        assertEquals(firstCachedValue, cacheService.retrieve(cacheId, firstCacheKey).value());
 
+        assertNotNull(cacheService.retrieve(cacheId, firstCacheKey).value());
         cacheService.add(cacheId, "2nd cache key", "this value should push the 1st value out of the cache");
-
         assertNull(cacheService.retrieve(cacheId, firstCacheKey).value());
     }
 
     @Test
-    public void expiresCachedElements() throws Exception {
+    public void retrieveShouldExpireCachedElementsWithAnExpirationTime() throws Exception {
         int expirationTimeInSeconds = 1;
         CacheConfig cacheConfig = new CacheConfig(DONT_CARE_ABOUT_SIZE, expirationTimeInSeconds, Time.SECONDS);
 
-        cacheService.setEhcacheManager(ehCacheManager);
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
         String valueToBeCached = "value that will be added to the cache";
         cacheService.add(cacheId, cacheKey, valueToBeCached);
 
-        assertEquals(valueToBeCached, cacheService.retrieve(cacheId, cacheKey).value());
+        assertNotNull(cacheService.retrieve(cacheId, cacheKey).value());
         TimeUnit.SECONDS.sleep(expirationTimeInSeconds + 1);
         assertNull(cacheService.retrieve(cacheId, cacheKey).value());
     }
@@ -131,17 +134,33 @@ public class DefaultCacheServiceTest {
      * If the user wants eternal, they should use {@link CacheConstants#NO_EXPIRATION}
      */
     @Test
-    public void doesNotSetZeroExpirationForVerySmallValues() throws Exception {
+    public void createCacheIfNecessaryShouldNotSetZeroSecondExpirationTimeForVerySmallTimeValue() throws Exception {
         CacheConfig cacheConfig = new CacheConfig(100, 10, Time.MILLISECONDS);
 
-        cacheService.setEhcacheManager(ehCacheManager);
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
 
         Cache cache = ehCacheManager.getCache(cacheId);
         assertTrue(!cache.getCacheConfiguration().isEternal());
+        int roundedUpTime = 1;
+        assertEquals(roundedUpTime, cache.getCacheConfiguration().getTimeToLiveSeconds());
+    }
 
-        int expectedTimeToLiveSeconds = 1;
-        assertEquals(expectedTimeToLiveSeconds, cache.getCacheConfiguration().getTimeToLiveSeconds());
+    public void addShouldAddObjectToCache() {
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+
+        cacheService.add(cacheId, cacheKey, expectedValue);
+        String retrieved = (String) cacheService.retrieve(cacheId, cacheKey).value();
+
+        assertThat(expectedValue, equalTo(retrieved));
+    }
+
+    public void addShouldPutObjectInEhcache() {
+        cacheService.setEhcacheManager(mockEhcacheManager);
+        when(mockEhcacheManager.getEhcache(cacheId)).thenReturn(mockEhcache);
+
+        cacheService.add(cacheId, cacheKey, expectedValue);
+
+        verify(mockEhcache).put(new Element(cacheKey, expectedValue));
     }
 
     /**
@@ -154,13 +173,12 @@ public class DefaultCacheServiceTest {
      *   thread 2 sees modifications <-- thread safety issue (unless object-in-cache is thread safe, which is unlikely) 
      */
     @Test
-    public void clonesObjectWhenPuttingInCache() throws Exception {
+    public void addShouldStoreClonedObjectForThreadSafety() throws Exception {
         String initialValue = "initial value";
 
         Cacheable original = new Cacheable();
         original.field = initialValue;
 
-        cacheService.setEhcacheManager(ehCacheManager);
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
         cacheService.add(cacheId, cacheKey, original);
         original.field = "new value doesn't change value in cache";
@@ -168,6 +186,32 @@ public class DefaultCacheServiceTest {
 
         assertNotSame(original, retrieved);
         assertEquals(initialValue, retrieved.field);
+    }
+
+    public void retrieveShouldReturnCachedValueWithWasFoundEqualToTrueWhenObjectInCache() {
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+        cacheService.add(cacheId, cacheKey, "value doesn't matter just that something is actually cached");
+
+        CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
+
+        assertThat(cachedValue.wasFound(), is(true));
+    }
+
+    public void retrieveShouldReturnCachedValueWithWasFoundEqualToFalseWhenObjectNotInCache() {
+        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
+
+        CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
+
+        assertThat(cachedValue.wasFound(), is(false));
+    }
+
+    public void retrieveShouldGetObjectFromEhcache() {
+        cacheService.setEhcacheManager(mockEhcacheManager);
+        when(mockEhcacheManager.getEhcache(cacheId)).thenReturn(mockEhcache);
+
+        cacheService.retrieve(cacheId, cacheKey);
+
+        verify(mockEhcache).get(cacheKey);
     }
 
     /**
@@ -180,11 +224,10 @@ public class DefaultCacheServiceTest {
      *   thread 2 sees modifications <-- thread safety issue (unless object-in-cache is thread safe, which is unlikely) 
      */
     @Test
-    public void clonesObjectWhenGettingFromCache() throws Exception {
+    public void retrieveShouldReturnClonedObjectForThreadSafety() throws Exception {
         Cacheable original = new Cacheable();
         original.field = "initial value";
 
-        cacheService.setEhcacheManager(ehCacheManager);
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
         cacheService.add(cacheId, cacheKey, original);
 
@@ -197,36 +240,11 @@ public class DefaultCacheServiceTest {
         assertEquals(original.field, secondRetrieved.field);
     }
 
+    /**
+     * test {@link DefaultCacheService#retrieve(String, String)} handles nulls
+     */
     @Test
-    public void wasFoundIsTrueWhenRetrievingExistingValue() throws Exception {
-        Cacheable original = new Cacheable();
-        original.field = "some value";
-
-        cacheService.setEhcacheManager(ehCacheManager);
-
-        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-        cacheService.add(cacheId, cacheKey, original);
-        CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
-
-        assertTrue(cachedValue.wasFound());
-        Cacheable cached = (Cacheable) cachedValue.value();
-        assertEquals(original.field, cached.field);
-    }
-
-    @Test
-    public void wasFoundIsFalseWhenRetrievingNonExistentValue() throws Exception {
-        cacheService.setEhcacheManager(ehCacheManager);
-
-        cacheService.createCacheIfNecessary(cacheId, cacheConfig);
-        CachedValue cachedValue = cacheService.retrieve(cacheId, cacheKey);
-
-        assertTrue(!cachedValue.wasFound());
-    }
-
-    @Test
-    public void cacheHandlesNullValues() throws Exception {
-        cacheService.setEhcacheManager(ehCacheManager);
-
+    public void retrieveShouldReturnNullValueWhenGivenNullValue() throws Exception {
         final String nullCacheValue = null;
 
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
@@ -249,9 +267,7 @@ public class DefaultCacheServiceTest {
      * This test proves that special code is working.
      */
     @Test
-    public void cacheHandlesNullKey() throws Exception {
-        cacheService.setEhcacheManager(ehCacheManager);
-
+    public void retrieveShouldFindCorrectValueForNullKey() throws Exception {
         final String nullCacheKey = null;
 
         cacheService.createCacheIfNecessary(cacheId, cacheConfig);
@@ -264,12 +280,13 @@ public class DefaultCacheServiceTest {
     }
 
     /**
-     * This test may not fail all the time, however, if it fails
-     * even due to an {@link ObjectExistsException}, it means
-     * our synchronization isn't working.
+     * This is a thread-safety test. If this library had a thread-safety issue,
+     * this test may incorrectly pass sometimes, however, if it fails
+     * even once due to an {@link ObjectExistsException}, it means there
+     * is a thread-safety issue (our synchronization isn't working).
      */
     @Test
-    public void createCacheIfNecessaryIsThreadSafe() throws Exception {
+    public void createCacheIfNecessaryShouldNotThrowThreadSafetyException() throws Exception {
         cacheService.setEhcacheManager(new CacheManager() {
             @Override
             public boolean cacheExists(String cacheName) throws IllegalStateException {
@@ -308,6 +325,11 @@ public class DefaultCacheServiceTest {
         }
     }
 
+    /**
+     * Helper class for unit tests
+     * 
+     * @author Brad Cupit
+     */
     private static class Cacheable {
         private String field;
     }

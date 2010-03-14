@@ -20,13 +20,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * Unit test for {@link CacheReturnValue}
+ * Unit test for {@link CacheReturnValue} annotation
  * 
  * @author Brad Cupit
  */
 public class CacheReturnValueTest {
     @Test
-    public void methodAnnotationAvaialableWithReflection() throws Exception {
+    public void annotationOnMethodShouldBeQueryableViaReflection() throws Exception {
         class TestClass {
             @CacheReturnValue
             @SuppressWarnings("unused")
@@ -38,7 +38,7 @@ public class CacheReturnValueTest {
     }
 
     @Test
-    public void classAnnotationAvaialableWithReflection() throws Exception {
+    public void annotationOnClassShouldBeQueryableViaReflection() throws Exception {
         @CacheReturnValue
         class TestClass {
         }
