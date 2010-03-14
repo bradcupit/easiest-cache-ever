@@ -50,7 +50,7 @@ public class DefaultKeyGeneratorTest {
      * the argument types (to differentiate overloaded methods).
      */
     @Test
-    public void methodKeyForZeroParaemeterMethod() throws Exception {
+    public void generateMethodKeyShouldReturnFullyQualifiedMethodNameForZeroParams() throws Exception {
         MethodCall methodCall = new MethodCall(className, methodName, zeroParamTypes, zeroParams);
 
         String methodKey = keyGenerator.generateMethodKey(methodCall);
@@ -81,15 +81,18 @@ public class DefaultKeyGeneratorTest {
      * run("hi");           // calls run(String s)
      * run((Object) "hi");  // calls run(Object o)
      * 
-     * If we didn't have the below test and corresponding code, the two cache keys would be the same:
-     *   com.something.SomeClass.run<string>hi</string>
+     * If we didn't have the below test and corresponding code, the two cache names and
+     * keys would be the same, resulting in the same result for two different method calls:
+     *   cache name:  com.something.SomeClass.run
+     *   cache key:   <string>hi</string>
      * 
-     * With this feature, the cache keys are different:
+     * With this feature, though the cache keys are the same (<string>hi</string>) the cache
+     * names are different:
      *   com.something.SomeClass.run(java.lang.String)
      *   com.something.SomeClass.run(java.lang.Object)
      */
     @Test
-    public void methodKeyForTwoParamMethodContainsFullyQualifiedParameterClassNames() throws Exception {
+    public void generateMethodKeyShouldReturnKeyEndingWithFullyQualifiedClassesOfParams() throws Exception {
         Class<?>[] twoArgsTypes = new Class<?>[] { TestArgument1.class, TestArgument2.class };
         Object[] twoArgs = new Object[] { new TestArgument1(), new TestArgument2() };
         MethodCall methodCall = new MethodCall(className, methodName, twoArgsTypes, twoArgs);
@@ -100,8 +103,13 @@ public class DefaultKeyGeneratorTest {
         assertThat(methodKey, endsWith(fullyQualifiedMethodArgs));
     }
 
+    /**
+     * the "method key" is the name of the cache, and the "parameter key" is the
+     * key in that cache. Also, for zero parameters there will only be one entry
+     * in that cache. Null makes more sense than "" in that case.
+     */
     @Test
-    public void parameterKeyForZeroParameterMethod() throws Exception {
+    public void generateParameterKeyShouldReturnNullForZeroParams() throws Exception {
         String parameterKey = keyGenerator.generateParameterKey(zeroParamsList);
 
         assertNull(parameterKey);
@@ -113,7 +121,7 @@ public class DefaultKeyGeneratorTest {
      * than serialized collections)
      */
     @Test
-    public void parameterKeyForTwoParamMethodContainsSerializedArguments() throws Exception {
+    public void generateParameterKeyShouldEndWithSerializedParams() throws Exception {
         String firstParameter = "hi";
         Integer secondParameter = 42;
         List<?> parameters = Arrays.asList((Object) firstParameter, (Object) secondParameter);
@@ -129,7 +137,7 @@ public class DefaultKeyGeneratorTest {
      * <object-array> and </object-array> so we save memory by discarding it
      */
     @Test
-    public void parameterKeyIncludesSerializedArgumentsWithOptimzationForOneArgMethods() throws Exception {
+    public void parameterKeyShouldEndWithOptimizedArgumentsForOneArgMethods() throws Exception {
         String argument = "hi";
         String cacheKey = keyGenerator.generateParameterKey(Arrays.asList(argument));
 
@@ -143,12 +151,27 @@ public class DefaultKeyGeneratorTest {
         return defaultKeyGenerator;
     }
 
+    /**
+     * empty class used for testing
+     * 
+     * @author Brad Cupit
+     */
     public static class TestClass {
     }
 
+    /**
+     * empty class used for testing
+     * 
+     * @author Brad Cupit
+     */
     public static class TestArgument1 {
     }
 
+    /**
+     * empty class used for testing
+     * 
+     * @author Brad Cupit
+     */
     public static class TestArgument2 {
     }
 }

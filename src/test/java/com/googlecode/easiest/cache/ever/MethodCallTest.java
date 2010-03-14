@@ -27,8 +27,13 @@ import org.junit.Test;
  * @author Brad Cupit
  */
 public class MethodCallTest {
+    /**
+     * even though we pass in an array, we want a list when we call
+     * {@link MethodCall#getParameterTypes()} (since lists are so
+     * much nicer to work with)
+     */
     @Test
-    public void convertsParameterTypesArrayToList() throws Exception {
+    public void getParameterTypesShouldReturnListInsteadOfArray() throws Exception {
         Class<?>[] parameterTypesArray = { Integer.class, String.class };
 
         MethodCall methodCall = new MethodCall(null, null, parameterTypesArray, new Object[0]);
@@ -39,8 +44,13 @@ public class MethodCallTest {
         assertEquals(parameterTypesArray[1], parameterTypesList.get(1));
     }
 
+    /**
+     * even though we pass in an array, we want a list when we call
+     * {@link MethodCall#getParameters()} (since lists are so
+     * much nicer to work with)
+     */
     @Test
-    public void convertsParameterArrayToList() throws Exception {
+    public void getParametersShouldReturnListInsteadOfArray() throws Exception {
         Object[] parameterArray = { 1, "abc" };
 
         MethodCall methodCall = new MethodCall(null, null, new Class<?>[0], parameterArray);
@@ -52,7 +62,7 @@ public class MethodCallTest {
     }
 
     @Test
-    public void testGetFullMethodNameWithParameters() throws Exception {
+    public void getFullMethodNameWithParametersShouldReturnFullMethodNameAndParamClasses() throws Exception {
         String className = "com.something.ClassName";
         String methodName = "methodName";
         Class<?>[] parameterTypesArray = { Integer.class, String.class };
