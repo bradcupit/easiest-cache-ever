@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * POJO to hold information about the intercepted method.
+ * Holds information about the intercepted method.
  * This way we don't need to propagate AOP specific classes
  * throughout the codebase.
  * 
