@@ -16,11 +16,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.googlecode</groupId>
+    <groupId>com.googlecode.easiest-cache-ever</groupId>
     <artifactId>easiest-cache-ever</artifactId>
     <name>easiest-cache-ever</name>
     <version>0.9.0-SNAPSHOT</version>
     <description>ridiculously easy Java cache</description>
+    <url>http://code.google.com/p/easiest-cache-ever/</url>
     <build>
         <plugins>
             <plugin>
@@ -45,23 +46,14 @@
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>1.6.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>1.6.6</version>
-            <scope>runtime</scope>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <!-- http://robust-it.co.uk/clone/ -->
-            <groupId>uk.co.robust-it</groupId>
+            <groupId>uk.com.robust-it</groupId>
             <artifactId>cloning</artifactId>
-            <version>1.7</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/cloning-1.7.jar</systemPath>
+            <version>1.7.1</version>
         </dependency>
         <dependency>
             <!-- referenced by cloning.jar -->
@@ -89,15 +81,16 @@
             </exclusions>
         </dependency>
         <dependency>
-            <!--
-                hamcrest 1.2 is not in the maven repo yet. Once it is, scope should be changed to 'test'. see
-                http://code.google.com/p/hamcrest/issues/detail?id=12
-            -->
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <version>1.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/hamcrest-all-1.2.jar</systemPath>
+            <version>1.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>sonatype</id>
+            <url>http://oss.sonatype.org/service/local/repositories/ukcomrobust-it-049/content</url>
+        </repository>
+    </repositories>
 </project>
