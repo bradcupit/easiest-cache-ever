@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
    Copyright 2010 Brad Cupit
 
@@ -15,7 +16,7 @@
 -->
 
 <!--
-    NOTE: this file is not actually used. It only exists to:
+    NOTE: this file is not really pertinent. It exists to:
         1) satisfy ehcache so it won't generate a warning at startup
         2) in the future, if code creates a cache with CacheManager.add(java.lang.String)
            it will use the safe defaults in this file
