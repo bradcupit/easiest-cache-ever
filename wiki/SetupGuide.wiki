@@ -13,11 +13,11 @@ It couldn't be easier:
     <param-value>classpath:applicationContext*.xml</param-value>
 </context-param>
 }}}
-  just change this line:
+ just change this line:
 {{{
 <param-value>classpath:applicationContext*.xml</param-value>
 }}}
-  to this:
+ to this:
 {{{
 <param-value>classpath:applicationContext*.xml classpath:easiest-cache-ever-spring.xml</param-value>
 }}}
