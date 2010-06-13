@@ -1,15 +1,11 @@
 #summary How to setup easiest-cache-ever
 #labels Featured
 
-==Spring Setup==
-
-Note: with the Spring setup, only public methods can be cache-enabled. Furthermore, when one method in a class calls a public method in itself (or it's subclasses) that cannot be cache-enabled either.
-
-===Webapp using Maven 2===
+==Webapp using Maven 2==
 
 It couldn't be easier:
 
- * update your pom so it depends on easiest-cache-ever (this may require a mvn install on the easiest-cache-ever source, if it's not yet in the maven central repo)
+ * update your pom so it depends on easiest-cache-ever (this may require a mvn install on the easiest-cache-ever source, if easiest-cache-ever.jar isn't in the maven central repo)
  * in your web.xml, you probably have something like:
 {{{
 <context-param>
@@ -17,12 +13,13 @@ It couldn't be easier:
     <param-value>classpath:applicationContext*.xml</param-value>
 </context-param>
 }}}
-just change this line:
+  just change this line:
 {{{
 <param-value>classpath:applicationContext*.xml</param-value>
 }}}
-
-to this:
+  to this:
 {{{
 <param-value>classpath:applicationContext*.xml classpath:easiest-cache-ever-spring.xml</param-value>
 }}}
+
+_Note: when using Spring (and not the AspectJ compiler or AspectJ load-time weaver), only public methods can be cache-enabled. Furthermore, when one method in a class calls a public method in itself (or it's subclasses) that cannot be cache-enabled either._
