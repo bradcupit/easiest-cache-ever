@@ -6,7 +6,7 @@ _Note: when using Spring (and not the AspectJ compiler or AspectJ load-time weav
 =webapp with Maven=
 
  * update your pom so it depends on easiest-cache-ever ([#Make_your_Maven_project_depend_on_easiest-cache-ever more info])
- * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_Detailed_web.xml_config more info])
+ * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_detailed_web.xml_config more info])
 
 See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-test/trunk this project] for a working demo.
 
@@ -14,7 +14,7 @@ See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-t
 
  * download either of the 'all dependencies' zips from [http://code.google.com/p/easiest-cache-ever/downloads/list here]
  * unzip and put all jars on the classpath
- * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_Detailed_web.xml_config more info])
+ * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_detailed_web.xml_config more info])
 
 =non-webapp with Maven=
 
