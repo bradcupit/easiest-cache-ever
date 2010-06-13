@@ -3,23 +3,29 @@
 
 ==Webapp using Maven 2==
 
-It couldn't be easier:
+ * update your pom so it depends on easiest-cache-ever (more info)
+ * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param (more info)
 
- * update your pom so it depends on easiest-cache-ever (this may require a mvn install on the easiest-cache-ever source, if easiest-cache-ever.jar isn't in the maven central repo)
- * in your web.xml, you probably have something like:
+See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-test/trunk this project] for a working demo.
+
+_Note: when using Spring (and not the AspectJ compiler or AspectJ load-time weaver), only public methods can be cache-enabled. Furthermore, when one method in a class calls a public method in itself (or it's subclasses) that cannot be cache-enabled either._
+
+===Depending on easiest-cache-ever with Maven 2===
+If easiest cache ever isn't in the maven central repo, you can still depend on it by installing it locally on your machine. Just checkout the source, and run `mvn install`, then depend on easiest-cache-ever like normal in your pom.
+
+===More Detailed web.xml config===
+In your web.xml, you probably have something like:
 {{{
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:applicationContext*.xml</param-value>
 </context-param>
 }}}
- just change this line:
+just change this line:
 {{{
 <param-value>classpath:applicationContext*.xml</param-value>
 }}}
- to this:
+To this:
 {{{
 <param-value>classpath:applicationContext*.xml classpath:easiest-cache-ever-spring.xml</param-value>
 }}}
-
-_Note: when using Spring (and not the AspectJ compiler or AspectJ load-time weaver), only public methods can be cache-enabled. Furthermore, when one method in a class calls a public method in itself (or it's subclasses) that cannot be cache-enabled either._
