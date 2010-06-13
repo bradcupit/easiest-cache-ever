@@ -5,8 +5,24 @@
 
 Note: with the Spring setup, only public methods can be cache-enabled. Furthermore, when one method in a class calls a public method in itself (or it's subclasses) that cannot be cache-enabled either.
 
-TODO
+===Webapp using Maven 2===
 
-==AspectJ setup==
+It couldn't be easier:
 
-TODO
+* update your pom so it depends on easiest-cache-ever (this may require a mvn install on the easiest-cache-ever source, if it's not yet in the maven central repo)
+* in your web.xml, you probably have something like:
+{{{
+<context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:applicationContext*.xml</param-value>
+</context-param>
+}}}
+  just change this line:
+{{{
+<param-value>classpath:applicationContext*.xml</param-value>
+}}}
+
+to this:
+{{{
+<param-value>classpath:applicationContext*.xml classpath:easiest-cache-ever-spring.xml</param-value>
+}}}
