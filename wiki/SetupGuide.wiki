@@ -32,7 +32,7 @@ See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-t
 ===Make your Maven project depend on easiest-cache-ever===
 If easiest cache ever isn't in the maven central repo, you can still depend on it by installing it locally on your machine. Just checkout the source, and run `mvn install`, then depend on easiest-cache-ever like normal in your pom.
 
-===More Detailed web.xml config===
+===More detailed web.xml config===
 In your web.xml, you probably have something like:
 {{{
 <context-param>
