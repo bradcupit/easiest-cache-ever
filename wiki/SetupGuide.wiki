@@ -3,7 +3,7 @@
 
 _Note: when using Spring (and not the AspectJ compiler or AspectJ load-time weaver), only public methods can be cache-enabled. Furthermore, when one method in a class calls a public method in itself (or it's subclasses) that cannot be cache-enabled either._
 
-=Webapp using Maven 2=
+=Webapp with Maven=
 
  * update your pom so it depends on easiest-cache-ever ([#Make_your_Maven_project_depend_on_easiest-cache-ever more info])
  * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_Detailed_web.xml_config more info])
