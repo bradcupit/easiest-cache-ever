@@ -1,7 +1,7 @@
 #summary How to setup easiest-cache-ever
 #labels Featured
 
-==Webapp using Maven 2==
+=Webapp using Maven 2=
 
  * update your pom so it depends on easiest-cache-ever ([#Depending_on_easiest-cache-ever_with_Maven_2 more info])
  * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_Detailed_web.xml_config more info])
