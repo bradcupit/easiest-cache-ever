@@ -3,8 +3,8 @@
 
 ==Webapp using Maven 2==
 
- * update your pom so it depends on easiest-cache-ever (more info)
- * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param (more info)
+ * update your pom so it depends on easiest-cache-ever ([#Depending_on_easiest-cache-ever_with_Maven_2 more info])
+ * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_Detailed_web.xml_config more info])
 
 See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-test/trunk this project] for a working demo.
 
@@ -25,7 +25,7 @@ just change this line:
 {{{
 <param-value>classpath:applicationContext*.xml</param-value>
 }}}
-To this:
+to this:
 {{{
 <param-value>classpath:applicationContext*.xml classpath:easiest-cache-ever-spring.xml</param-value>
 }}}
