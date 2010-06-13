@@ -16,6 +16,19 @@ See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-t
  * unzip and put all jars on the classpath
  * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_Detailed_web.xml_config more info])
 
+=non-webapp with Maven=
+
+ * update your pom so it depends on easiest-cache-ever ([#Make_your_Maven_project_depend_on_easiest-cache-ever more info])
+ * tell Spring to also load "classpath:easiest-cache-ever-spring.xml" ([#Tell_Spring_about_easiest-cache-ever_in_a_non-webapp more info])
+
+See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-test/trunk this project] for a working demo.
+
+=non-webapp without Maven=
+
+ * download either of the 'all dependencies' zips from [http://code.google.com/p/easiest-cache-ever/downloads/list here]
+ * unzip and put all jars on the classpath
+ * tell Spring to also load "classpath:easiest-cache-ever-spring.xml" ([#Tell_Spring_about_easiest-cache-ever_in_a_non-webapp more info])
+
 ===Make your Maven project depend on easiest-cache-ever===
 If easiest cache ever isn't in the maven central repo, you can still depend on it by installing it locally on your machine. Just checkout the source, and run `mvn install`, then depend on easiest-cache-ever like normal in your pom.
 
@@ -34,4 +47,16 @@ just change this line:
 to this:
 {{{
 <param-value>classpath:applicationContext*.xml classpath:easiest-cache-ever-spring.xml</param-value>
+}}}
+
+===Tell Spring about easiest-cache-ever in a non-webapp===
+You probably have some code like this:
+{{{
+ApplicationContext appContext = new ClasspathXmlApplicationContext("applicationContext.xml");
+}}}
+
+Just change that line to:
+
+{{{
+ApplicationContext appContext = new ClasspathXmlApplicationContext(new String[] {"applicationContext.xml", "classpath:easiest-cache-ever-spring.xml"});
 }}}
