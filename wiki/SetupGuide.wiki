@@ -12,8 +12,8 @@ See [http://code.google.com/p/easiest-cache-ever/source/browse/#svn/spring-aop-t
 
 =Webapp without Maven=
 
-* download the 'all dependencies' zip from [http://code.google.com/p/easiest-cache-ever/downloads/list here]
-* unzip and put all jars on the classpath
+ * download the 'all dependencies' zip from [http://code.google.com/p/easiest-cache-ever/downloads/list here]
+ * unzip and put all jars on the classpath
  * add classpath:easiest-cache-ever-spring.xml to your web.xml's contextConfigLocation param ([#More_Detailed_web.xml_config more info])
 
 ===Make your Maven project depend on easiest-cache-ever===
