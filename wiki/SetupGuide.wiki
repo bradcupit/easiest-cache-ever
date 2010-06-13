@@ -58,5 +58,7 @@ ApplicationContext appContext = new ClasspathXmlApplicationContext("applicationC
 Just change that line to:
 
 {{{
-ApplicationContext appContext = new ClasspathXmlApplicationContext(new String[] {"applicationContext.xml", "classpath:easiest-cache-ever-spring.xml"});
+ApplicationContext appContext = new ClasspathXmlApplicationContext(
+new String[] { "applicationContext.xml",
+               "classpath:easiest-cache-ever-spring.xml" });
 }}}
