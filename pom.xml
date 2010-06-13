@@ -19,7 +19,7 @@
     <groupId>com.googlecode.easiest-cache-ever</groupId>
     <artifactId>easiest-cache-ever</artifactId>
     <name>easiest-cache-ever</name>
-    <version>0.9.0</version>
+    <version>0.9.1-SNAPSHOT</version>
     <description>ridiculously easy Java cache</description>
     <url>http://code.google.com/p/easiest-cache-ever/</url>
     <build>
