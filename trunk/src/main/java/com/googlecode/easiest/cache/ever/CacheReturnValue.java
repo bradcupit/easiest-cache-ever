@@ -72,6 +72,36 @@ import java.lang.annotation.Target;
  * the hardcoded defaults in {@link CacheAspect} are used.
  * 
  * @author Brad Cupit
+ * 
+ * TODO
+ * ideas:
+ * 
+ * // type safe (easy since you can't get it wrong)
+ * @Cache(maxSize = 10, hours = 1, minutes = 30,
+ *        expiresAt = @Time(year = ALL, month = ALL, day = 25, hour = 17, minute = 59, second = 0, millisecond = 0),
+ *        advanced = @Advanced(cacheNulls = true))
+ * 
+ * @Cache(maxSize = 10)
+ * @Cache(hours = 1, minutes = 30, expiresAt = @Time(hour = 4))
+ * @Cache(days = 1, hours = 12)
+ * 
+ * + @Cache(hours = 1, minutes = 30)
+ * - @Cache(duration = @Duration(hours = 1, minutes = 30)
+ * 
+ * // type safe (easy since you can't get it wrong)
+ * @Cache(hours = 1, minutes = 30, expiresAt = @SpecificTime(year = ALL, month = ALL, day = 25, hour = 17, minute = 59, second = 0, millisecond = 0),
+ *        advanced = @Advanced(cacheNulls = true))
+ * 
+ * // permutation explosion
+ * @Cache(expireEachSecondAt = @Second(millisecond = 297))
+ * @Cache(expireEachMinuteAt = @Minute(second = 30, millisecond = 297))
+ * @Cache(expireEachHourAt = @Hour(minute = 59, second = 30, millisecond = 297))
+ * @Cache(expireEachDayAt = @Day(hour = 17, minute = 59, second = 30, millisecond = 297))
+ * @Cache(expireEachMonthAt = @Month(day = 1, hour = 17, minute = 59, second = 30, millisecond = 297))
+ * @Cache(expireEachYearAt = @Year(month = 12, day = 1, hour = 17, minute = 59, second = 30, millisecond = 297))
+ * 
+ * // oh so readable, but easier to make mistakes                   
+ * @Cache(maxSize = 10, expireAfter = "5 minutes", expireAt = "4:00 am", advanced = @Advanced(cacheNulls = true))
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.METHOD, ElementType.TYPE })
