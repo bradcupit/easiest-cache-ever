@@ -11,8 +11,8 @@ public User findUser(String name) {
 }}}
 {{{
 findUser("Elmo");   // not found in cache
-findUser("Grover"); // not found in cache
 findUser("Elmo");   // found in cache!
+findUser("Grover"); // not found in cache
 }}}
 
 ==Set max size==
