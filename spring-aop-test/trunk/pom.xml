@@ -23,18 +23,9 @@
   <name>spring-aop-test</name>
   <description>easiest-cache-ever's manual test for Spring AOP</description>
   <url>http://code.google.com/p/easiest-cache-ever/</url>
-  <build>
-    <finalName>spring-aop-test</finalName>
-    <plugins>
-        <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-                <source>1.6</source>
-                <target>1.6</target>
-            </configuration>
-        </plugin>
-    </plugins>
-  </build>
+  <properties>
+    <wtpversion>2.0</wtpversion>
+  </properties>
   <dependencies>
   	<dependency>
   		<groupId>com.googlecode.easiest-cache-ever</groupId>
@@ -43,14 +34,9 @@
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
-  		<artifactId>spring-core</artifactId>
-  		<version>3.0.1.RELEASE</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.springframework</groupId>
   		<artifactId>spring-web</artifactId>
   		<version>3.0.1.RELEASE</version>
-        <scope>runtime</scope>
+        <scope>compile</scope>
   	</dependency>
     <dependency>
         <groupId>cglib</groupId>
@@ -70,4 +56,16 @@
   		<version>1.2</version>
   	</dependency>
   </dependencies>
+  <build>
+    <finalName>spring-aop-test</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>1.6</source>
+                <target>1.6</target>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
 </project>
