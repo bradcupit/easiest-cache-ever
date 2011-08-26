@@ -92,4 +92,4 @@ Since what we want is so simple, we should have a very simple way of using it. W
 public User findUser() { ... }
 }}}
 
-On top of that, it uses ehcache in the background, giving us scalable performance.
+On top of that, it's built on ehcache which provides [http://gregluck.com/blog/archives/2009/02/ehcache-1-6-2-orders-of-magnitude-faster/ great scalability].
