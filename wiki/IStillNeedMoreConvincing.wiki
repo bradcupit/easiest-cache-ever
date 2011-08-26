@@ -54,13 +54,13 @@ public User findProcess(String name) {
 }
 }}}
 
-Each chunk of code sure does look similar, doesn't it. Plus, the caching actually covers up the logic important to the method.
+Each chunk of code sure does look similar, doesn't it? Plus, the caching actually clouds the main logic.
 
 Also, what if we wanted something with a little more functionality? What about a cache that expired entries after a set amount of time? Or what about a cache that had a maximum size, and kicked out the oldest entry when that max was reached?
 
 For size-based, we could use [http://commons.apache.org/collections/ Apache Commons Collection's] [http://commons.apache.org/collections/api-release/org/apache/commons/collections/map/LRUMap.html LRUMap] (or a version supporting generics [http://larvalabs.com/collections/ here]). For time-based we can use [http://code.google.com/p/guava-libraries/ Google Guava's] (formerly known as Google Collections) [http://guava-libraries.googlecode.com/svn/trunk/javadoc/index.html MapMaker], which can build a map with an expiration time.
 
-But what if we need both time-based and size-based? We'd have to write one ourselves, and it turns out that's hard to make thread-safe.
+But what if we need both time-based and size-based? We'd have to write one ourselves, and it turns out that's hard to make thread-safe and highly scalable.
 
 We could use an existing cache, like [http://ehcache.org/ ehcache], which would give us both time limits and size limits:
 
@@ -91,3 +91,5 @@ Since what we want is so simple, we should have a very simple way of using it. W
 @CacheReturnValue(maxSize = 500, expirationTime = 5, unit = TimeUnit.MINUTES)
 public User findUser() { ... }
 }}}
+
+On top of that, it uses ehcache in the background, giving us scalable performance.
