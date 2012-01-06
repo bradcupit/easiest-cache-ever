@@ -15,7 +15,7 @@ The icon (which I found [http://www.iconspedia.com/icon/money-4135.html here]) i
 For more information, see this [http://www.apache.org/foundation/licence-FAQ.html#WhatDoesItMEAN page].
 
 ===Why does this require Spring or AspectJ?===
-easiest-cache-ever uses AOP (Aspect Oriented Programming), so you have to do very little work to enable caching. A plain annotation on a method doesn't really do much on it's own. The smarts are in the code which processes the annotation, and how will that smart code have access to your method which need caching? The answer is AOP, and the simplest way to setup AOP is through Spring. If you want to get fancy, you can use AspectJ (a new language based off Java that makes Aspects a first class citizen). The middle ground is an AspectJ load-time-weaver.
+easiest-cache-ever uses AOP (Aspect Oriented Programming), so you have to do very little work to enable caching. A plain annotation on a method doesn't really do much on it's own. The smarts are in the code which processes the annotation, and how will that smart code have access to your method which needs caching? The answer is AOP, and the simplest way to setup AOP is through Spring. If you want to get fancy, you can use AspectJ (a language based off Java that makes Aspects first class citizens). The middle ground is an AspectJ load-time-weaver.
 
 ===Why isn't caching working?===
 
