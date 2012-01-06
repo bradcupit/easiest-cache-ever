@@ -20,7 +20,9 @@ easiest-cache-ever uses AOP (Aspect Oriented Programming), so you have to do ver
 ===Why isn't caching working?===
 
 Is Spring/AspectJ caching setup properly? See the migration guide for help.
+
 If using Spring AOP, are you calling a non-public method? Only public methods are supported with Spring AOP. You may want to try load-time-weaving, or make your method public.
+
 With Spring AOP, are you calling a method within your own class? Spring AOP can only intercept calls from one object to another. It can't intercept calls from one object to itself, or from one object to it's super/subclasses. You may want to try load-time-weaving, or refactor your code so it's two separate objects.
 
 ===Why use easiest-cache-ever when I already have a Hibernate/JPA cache?===
