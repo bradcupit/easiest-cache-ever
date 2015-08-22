@@ -1,0 +1,92 @@
+## Why not just manually cache? ##
+Good question. A manual cache is fairly easy to implement.
+```
+private Map<String, User> userCache = new HashMap<String, User>();
+
+public User findUser(String name) {
+    User user = userCache.get(name);
+    if (user == null) {
+        user = someLongOperation();
+        userCache.put(name, user);
+    }
+
+    return user;
+}
+```
+
+That's not bad. Simple enough, and any Java coder can understand it. What happens if we need a few caches though?
+```
+private Map<String, User> userCache = new HashMap<String, User>();
+private Map<String, Admin> adminCache = new HashMap<String, Admin>();
+private Map<String, Process> processCache = new HashMap<String, Process>();
+
+public User findUser(String name) {
+    User user = userCache.get(name);
+    if (user == null) {
+        user = someLongOperation();
+        userCache.put(name, user);
+    }
+
+    return user;
+}
+
+public User findAdmin(String name) {
+    Admin admin = adminCache.get(name);
+    if (admin == null) {
+        admin = someLongOperation();
+        adminCache.put(name, admin);
+    }
+
+    return admin;
+}
+
+public User findProcess(String name) {
+    Process process = processCache.get(name);
+    if (process == null) {
+        process = someLongOperation();
+        processCache.put(name, process);
+    }
+
+    return process;
+}
+```
+
+Each chunk of code sure does look similar, doesn't it? Plus, the caching actually clouds the main logic.
+
+Also, what if we wanted something with a little more functionality? What about a cache that expired entries after a set amount of time? Or what about a cache that had a maximum size, and kicked out the oldest entry when that max was reached?
+
+For size-based, we could use [Apache Commons Collection's](http://commons.apache.org/collections/) [LRUMap](http://commons.apache.org/collections/api-release/org/apache/commons/collections/map/LRUMap.html) (or a version supporting generics [here](http://larvalabs.com/collections/)). For time-based we can use [Google Guava's](http://code.google.com/p/guava-libraries/) (formerly known as Google Collections) [MapMaker](http://guava-libraries.googlecode.com/svn/trunk/javadoc/index.html), which can build a map with an expiration time.
+
+But what if we need both time-based and size-based? We'd have to write one ourselves, and it turns out that's hard to make thread-safe and highly scalable.
+
+We could use an existing cache, like [ehcache](http://ehcache.org/), which would give us both time limits and size limits:
+
+```
+cacheManager.addCache(new Cache(USER_CACHE, MAX_ELEMENTS_IS_FIVE_HUNDRED, false, false, FIVE_MINUTES, 0));
+
+...
+
+public User findUser(String name) {
+    Cache cache = cacheManager.getCache(USER_CACHE);
+    Element element = cache.get(name);
+    User user;
+    if (element != null) {
+        user = (User) element.getValue();
+    } else {
+        user = someLongOperation();
+        cache.put(new Element(name, user));
+    }
+
+    return user;
+}
+```
+
+That code is more cumbersome then just using a Map. Ehcache also supports xml configuration, which might make the Cache creation look better, but then we have switch to another file to configure each cache, and we would still have to write the cumbersome code in the findUser(..) method.
+
+Since what we want is so simple, we should have a very simple way of using it. With easiest-cache-ever you get a super-easy, read-only cache in just one line of code:
+```
+@CacheReturnValue(maxSize = 500, expirationTime = 5, unit = TimeUnit.MINUTES)
+public User findUser() { ... }
+```
+
+On top of that, it's built on ehcache which provides [great scalability](http://gregluck.com/blog/archives/2009/02/ehcache-1-6-2-orders-of-magnitude-faster/).

@@ -1,0 +1,26 @@
+  1. [Which license is this released under?](#Which_license_is_this_released_under?.md)
+  1. [Why does this require Spring or AspectJ?](#Why_does_this_require_Spring_or_AspectJ?.md)
+  1. [Why isn't caching working?](#Why_isn't_caching_working?.md)
+  1. [What is an AspectJ load-time weaver?](#What_is_an_AspectJ_load-time_weaver?.md)
+  1. [Why use easiest-cache-ever when I already have a Hibernate/JPA cache?](#Why_use_easiest-cache-ever_when_I_already_have_a_Hibernate/JPA_c.md)
+
+### Which license is this released under? ###
+The Apache License 2.0, which basically says you can use this library or it's source code in any project (even commercial ones). You accept the code as-is, and can't sue me if something goes wrong. If you distribute the code or compiled files, or the jar (whether you modified it or not), you must include a copy of the license. If you just distribute the jar, it already includes the license in the jar, so you don't have to do anything.
+
+The icon (which I found [here](http://www.iconspedia.com/icon/money-4135.html)) is available under the LGPL.
+
+For more information, see this [page](http://www.apache.org/foundation/licence-FAQ.html#WhatDoesItMEAN).
+
+### Why does this require Spring or AspectJ? ###
+easiest-cache-ever uses AOP (Aspect Oriented Programming), so you have to do very little work to enable caching. A plain annotation on a method doesn't really do much on it's own. The smarts are in the code which processes the annotation, and how will that smart code have access to your method which needs caching? The answer is AOP, and the simplest way to setup AOP is through Spring. If you want to get fancy, you can use AspectJ (a language based off Java that makes Aspects first class citizens). The middle ground is an AspectJ load-time-weaver.
+
+### Why isn't caching working? ###
+
+Is Spring/AspectJ caching setup properly? See the SetupGuide for help.
+
+If using Spring AOP, are you calling a non-public method? Only public methods are supported with Spring AOP. You may want to try load-time-weaving, or make your method public.
+
+With Spring AOP, are you calling a method within your own class? Spring AOP can only intercept calls from one object to another. It can't intercept calls from one object to itself, or from one object to it's super/subclasses. You may want to try load-time-weaving, or refactor your code so it's two separate objects.
+
+### Why use easiest-cache-ever when I already have a Hibernate/JPA cache? ###
+If you're already using Hibernate's 2nd level cache, you may not need this project. However, easiest-cache-ever is more than just a database cache. It can cache any call, like a webservice call, a long running computation, an XPath query, etc.
